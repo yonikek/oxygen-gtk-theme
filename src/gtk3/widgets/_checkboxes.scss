@@ -34,18 +34,20 @@ radio {
 	//border: none;
 	animation-timing-function: $ease-out-quad;
 	background-color: gtk("@theme_button_background_normal");
-	border: 1px solid gtkalpha(
-		gtk("@theme_button_foreground_normal"),
-		0.33
-	);
+	background-image: oxy-gradient(gtk("@theme_button_background_normal"), 1.12, 0.94);
+	box-shadow: oxy-raised-flat(gtk("@theme_button_background_normal"));
+	border: 1px solid oxy-outline(gtk("@theme_button_background_normal"));
 
 	-gtk-icon-shadow: none;
 	-gtk-icon-palette: fg gtk("@theme_fg_color");
 
 	&:hover {
 		border: 1px solid gtk("@theme_button_decoration_hover");
+		box-shadow: oxy-raised-flat-glow(gtk("@theme_button_background_normal"), gtk("@theme_button_decoration_hover"), 0.3);
 	}
 	&:disabled {
+		box-shadow: none;
+		background-image: none;
 		background-color: gtk("@insensitive_base_color");
 
 		border-color: gtkalpha(
@@ -55,7 +57,8 @@ radio {
 	}
 
 	&:active {
-		background: shade(gtk("@theme_base_color"), 0.9)
+		background: shade(gtk("@theme_base_color"), 0.9);
+		box-shadow: oxy-sunken();
 	}
 
 	&:focus {
@@ -64,17 +67,15 @@ radio {
 
 	&:indeterminate,
 	&:checked {
-		border-color: gtk("@theme_button_decoration_hover");
-		background-color: gtkalpha(
-			gtk("@theme_button_decoration_hover"),
-			0.33
-		);
+		border-color: oxy-outline(gtk("@theme_button_background_normal"));
+		background-color: gtk("@theme_button_background_normal");
 
 		&:backdrop {
 			background-color: gtkalpha(
 				gtk("@theme_unfocused_selected_bg_color"),
 				0.33
 			);
+			background-image: none;
 
 			border-color: gtk("@theme_unfocused_selected_bg_color");
 		}
@@ -96,6 +97,7 @@ radio {
 		min-height: 14px;
 		min-width: 14px;
 		background-color: transparent;
+		background-image: none;
 		box-shadow: none;
 		-gtk-icon-shadow: none;
 		animation: none;

@@ -72,6 +72,7 @@ notebook {
 							gtk("@theme_fg_color"),
 							0.2
 						);
+						background-image: oxy-tab-gradient(gtk("@theme_fg_color"));
 						border-radius: 0;
 
 
@@ -90,6 +91,7 @@ notebook {
 								gtk("@theme_selected_bg_color"),
 								0.2
 							);
+							background-image: oxy-tint-gradient(gtk("@theme_selected_bg_color"), 0.4, 0.15);
 
 						}
 
@@ -145,8 +147,8 @@ notebook {
 
 						&:checked {
 							transition: none;
-							border-color: gtk("@borders");
-							border-#{$_tab}-color: gtk("@theme_selected_bg_color");
+							border-color: oxy-outline(gtk("@theme_bg_color"), 0.75);
+							border-#{$_tab}-color: oxy-bevel(gtk("@theme_bg_color"), 1.3);
 
 							$_radius: ();
 
@@ -158,6 +160,7 @@ notebook {
 							border-radius: $_radius;
 
 							background-color: gtk("@theme_bg_color");
+							background-image: oxy-gradient(gtk("@theme_bg_color"), 1.06, 1);
 						}
 					}
 
@@ -196,6 +199,7 @@ notebook {
 							border-style: solid;
 							border-color: transparent;
 							background-color: gtk("@theme_bg_color");
+							background-image: none;
 							background-clip: padding-box;
 							border-#{$_border}-width: 1px;
 							border-#{$_border}-color: gtk("@borders");

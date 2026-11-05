@@ -229,6 +229,7 @@ label {
 
 %selected_items {
 	background-color: gtk("@theme_selected_bg_color");
+	background-image: oxy-gradient(gtk("@theme_selected_bg_color"), 1.12, 0.94);
 	border-radius: 0px;
 
 	@at-root %nobg_selected_items,
@@ -253,4 +254,18 @@ label {
 
 picture:disabled {
 	opacity: 0.5;
+}
+
+// Oxygen paints a soft light gradient over the top of every window
+$_oxy_win_bg: gtk("@theme_bg_color");
+window.background,
+dialog.background,
+messagedialog.background {
+	background-image: unquote(
+		"linear-gradient(to bottom, #{oxy-bevel($_oxy_win_bg, 1.08)} 0px, #{$_oxy_win_bg} 280px)"
+	);
+
+	&:backdrop {
+		background-image: none;
+	}
 }

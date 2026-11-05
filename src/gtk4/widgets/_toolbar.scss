@@ -6,11 +6,13 @@
 %toolbar {
 	padding: 4px;
 	background-color: gtk("@theme_bg_color");
+	background-image: oxy-gradient(gtk("@theme_bg_color"), 1.05, 0.98);
 }
 .toolbar, toolbar {
 	@extend %toolbar;
 	padding: 4px 3px 3px 4px;
 	&:backdrop {
+		background-image: none;
 		background-color: gtk("@theme_unfocused_bg_color");
 		box-shadow: none;
 	}

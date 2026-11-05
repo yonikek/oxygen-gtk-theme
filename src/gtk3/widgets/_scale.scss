@@ -15,16 +15,18 @@ scale {
 	slider {
 		min-width: 16px;
 		min-height: 16px;
-		border: 1px solid gtkmix(gtk("@theme_bg_color"),gtk("@theme_button_foreground_normal"), 0.4);
+		border: 1px solid oxy-outline(gtk("@theme_button_background_normal"));
 		border-radius: 50%;
-		box-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.125);
+		box-shadow: oxy-raised(gtk("@theme_button_background_normal"));
 
-		background: gtk("@theme_button_background_normal");
+		background-color: gtk("@theme_button_background_normal");
+		background-image: oxy-gradient(gtk("@theme_button_background_normal"), 1.12, 0.94);
 		margin: -9px;
 
 		&:hover {
 			border-color: gtk("@theme_button_decoration_hover");
 			border-radius: 50%; // needed for double marks scales
+			background-image: oxy-gradient(gtk("@theme_button_background_normal"), 1.2, 1);
 
 			&:backdrop {
 				border-color: gtk(
@@ -61,8 +63,9 @@ scale {
 			}
 		}
 		&:active {
-			box-shadow: none;
+			box-shadow: oxy-sunken();
 			background-color: gtk("@theme_button_background_normal");
+			background-image: oxy-gradient(gtk("@theme_button_background_normal"), 0.86, 0.98);
 			&:backdrop {
 				background-color: gtk(
 					"@theme_button_background_normal"
@@ -81,8 +84,8 @@ scale {
 	}
 
 	trough {
-		min-width: 4px;
-		min-height: 4px;
+		min-width: 6px;
+		min-height: 6px;
 		border: 1px solid;
 		border-radius: $r;
 
@@ -91,10 +94,8 @@ scale {
 			gtkalpha(gtk("@theme_button_foreground_normal"), 0.5*0.2)
 		);
 
-		border-color: gtkalpha(
-			gtk("@theme_button_foreground_normal"),
-			0.2
-		);
+		border-color: oxy-outline(gtk("@theme_bg_color"), 0.7);
+		box-shadow: oxy-field();
 
 		&:disabled, &.vertical:disabled {
 			background: gtkoverlayalpha(
@@ -112,12 +113,10 @@ scale {
 	highlight {
 		margin: -1px;
 		border-radius: $r;
-		background: gtkoverlay(
-			gtk("@theme_bg_color"),
-			gtkalpha(gtk("@theme_button_decoration_hover"), 0.5)
-		);
+		background-color: gtk("@theme_selected_bg_color");
+		background-image: oxy-gradient(gtk("@theme_selected_bg_color"), 1.2, 0.92);
 
-		border: 1px solid gtk("@theme_button_decoration_hover");
+		border: 1px solid oxy-outline(gtk("@theme_selected_bg_color"), 0.7);
 
 		&:disabled {
 			background: none;

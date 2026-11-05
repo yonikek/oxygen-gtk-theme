@@ -17,31 +17,35 @@
 	//
 	@if $t==normal {
 		color: gtk("@theme_text_color");
-		border-color: gtk("@borders");
+		border-color: oxy-outline(gtk("@theme_base_color"), 0.65);
 		background-color: gtk("@theme_base_color");
-		box-shadow: none;
+		box-shadow: oxy-field();
 	}
 
 	@if $t==focus {
 		border-color: $fc;
+		box-shadow: oxy-field-glow($fc);
 	}
 
 	@if $t==insensitive {
 		color: gtk("@insensitive_base_fg_color");
 		border-color: gtk("@insensitive_borders");
 		background-color: gtk("@insensitive_base_color");
+		box-shadow: none;
 	}
 
 	@if $t==backdrop {
 		color: gtk("@theme_unfocused_text_color");
 		border-color: gtk("@unfocused_borders");
 		background-color: gtk("@theme_unfocused_base_color");
+		box-shadow: oxy-field();
 	}
 
 	@if $t==backdrop-insensitive {
 		color: gtk("@theme_unfocused_view_text_color");
 		border-color: gtk("@unfocused_insensitive_borders");
 		background-color: gtk("@theme_unfocused_view_bg_color");
+		box-shadow: none;
 	}
 }
 

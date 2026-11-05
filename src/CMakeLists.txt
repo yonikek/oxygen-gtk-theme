@@ -11,6 +11,15 @@ set(SOURCES
     render_assets.py
 )
 
+# Colour schemes the static (pre-built) variants are generated from. The
+# Oxygen scheme ships with Plasma; fall back to Breeze Light if it is absent.
+if(EXISTS "${BREEZE_COLOR_INSTALL_ROOT}/Oxygen.colors")
+    set(OXYGEN_GTK_LIGHT_SCHEME "Oxygen" CACHE STRING "Colour scheme for the light variant")
+else()
+    set(OXYGEN_GTK_LIGHT_SCHEME "BreezeLight" CACHE STRING "Colour scheme for the light variant")
+endif()
+set(OXYGEN_GTK_DARK_SCHEME "BreezeDark" CACHE STRING "Colour scheme for the dark variant")
+
 function(gen_targets THEME_NAME)
     set(THEME_DIR "${PROJECT_BINARY_DIR}/${THEME_NAME}")
     set(${THEME_NAME}_TARGETS
@@ -20,33 +29,33 @@ function(gen_targets THEME_NAME)
     )
 endfunction()
 
-gen_targets(Breeze)
-gen_targets(Breeze-Dark)
+gen_targets(Oxygen)
+gen_targets(Oxygen-Dark)
 
-list(APPEND Breeze_TARGETS
-    "${PROJECT_BINARY_DIR}/Breeze/gtk-3.0/gtk-dark.css"
-    "${PROJECT_BINARY_DIR}/Breeze/gtk-4.0/gtk-dark.css"
+list(APPEND Oxygen_TARGETS
+    "${PROJECT_BINARY_DIR}/Oxygen/gtk-3.0/gtk-dark.css"
+    "${PROJECT_BINARY_DIR}/Oxygen/gtk-4.0/gtk-dark.css"
 )
 
 add_custom_command(
-    OUTPUT ${Breeze-Dark_TARGETS}
+    OUTPUT ${Oxygen-Dark_TARGETS}
     DEPENDS ${SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/build_theme.sh
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/build_theme.sh -c BreezeDark -t "${PROJECT_BINARY_DIR}/Breeze-Dark" -r "${BREEZE_COLOR_INSTALL_ROOT}"
+    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/build_theme.sh -c ${OXYGEN_GTK_DARK_SCHEME} -t "${PROJECT_BINARY_DIR}/Oxygen-Dark" -r "${BREEZE_COLOR_INSTALL_ROOT}"
     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/src"
 )
-add_custom_target(Breeze-Dark ALL DEPENDS ${Breeze-Dark_TARGETS})
+add_custom_target(Oxygen-Dark ALL DEPENDS ${Oxygen-Dark_TARGETS})
 
 add_custom_command(
-    OUTPUT ${Breeze_TARGETS}
+    OUTPUT ${Oxygen_TARGETS}
     DEPENDS ${SOURCES} ${CMAKE_CURRENT_BINARY_DIR}/build_theme.sh
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/build_theme.sh -c BreezeLight -t "${PROJECT_BINARY_DIR}/Breeze" -r "${BREEZE_COLOR_INSTALL_ROOT}"
-    COMMAND cp gtk-dark-3.0.css "${PROJECT_BINARY_DIR}/Breeze/gtk-3.0/gtk-dark.css"
-    COMMAND cp gtk-dark-4.0.css "${PROJECT_BINARY_DIR}/Breeze/gtk-4.0/gtk-dark.css"
+    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/build_theme.sh -c ${OXYGEN_GTK_LIGHT_SCHEME} -t "${PROJECT_BINARY_DIR}/Oxygen" -r "${BREEZE_COLOR_INSTALL_ROOT}"
+    COMMAND cp gtk-dark-3.0.css "${PROJECT_BINARY_DIR}/Oxygen/gtk-3.0/gtk-dark.css"
+    COMMAND cp gtk-dark-4.0.css "${PROJECT_BINARY_DIR}/Oxygen/gtk-4.0/gtk-dark.css"
     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/src"
 )
-add_custom_target(Breeze ALL DEPENDS ${Breeze_TARGETS})
+add_custom_target(Oxygen ALL DEPENDS ${Oxygen_TARGETS})
 
-install(DIRECTORY "${PROJECT_BINARY_DIR}/Breeze" DESTINATION "${KDE_INSTALL_FULL_DATAROOTDIR}/themes/")
-install(DIRECTORY "${PROJECT_BINARY_DIR}/Breeze-Dark" DESTINATION "${KDE_INSTALL_FULL_DATAROOTDIR}/themes/")
-install(FILES settings.ini DESTINATION "${KDE_INSTALL_FULL_DATAROOTDIR}/themes/Breeze")
-install(FILES settings.ini DESTINATION "${KDE_INSTALL_FULL_DATAROOTDIR}/themes/Breeze-Dark")
+install(DIRECTORY "${PROJECT_BINARY_DIR}/Oxygen" DESTINATION "${KDE_INSTALL_FULL_DATAROOTDIR}/themes/")
+install(DIRECTORY "${PROJECT_BINARY_DIR}/Oxygen-Dark" DESTINATION "${KDE_INSTALL_FULL_DATAROOTDIR}/themes/")
+install(FILES settings.ini DESTINATION "${KDE_INSTALL_FULL_DATAROOTDIR}/themes/Oxygen")
+install(FILES settings.ini DESTINATION "${KDE_INSTALL_FULL_DATAROOTDIR}/themes/Oxygen-Dark")

@@ -12,8 +12,8 @@ headerbar {
 	border-style: solid;
 	border-color: gtk("@borders");
 	color: gtk("@theme_titlebar_foreground");
-	background-image: none;
 	background-color: gtk("@theme_titlebar_background");
+	background-image: oxy-gradient(gtk("@theme_titlebar_background"), 1.1, 0.96);
 	border-top: 1px solid lighter(gtk("@theme_titlebar_background"));
 
 	&:backdrop {

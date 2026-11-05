@@ -9,6 +9,7 @@ tooltip {
 		// background-color needs to be set this way otherwise it gets drawn twice
 		// see https://bugzilla.gnome.org/show_bug.cgi?id=736155 for details.
 		background-color: gtk("@tooltip_background");
+		background-image: oxy-gradient(gtk("@tooltip_background"), 1.15, 0.94);
 		background-clip: padding-box;
 	}
 

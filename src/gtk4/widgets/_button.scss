@@ -7,6 +7,9 @@
 	$fg: gtk("@theme_button_foreground_normal");
 
 	background-color: gtkalpha($c, 0.2);
+	background-image: unquote(
+		"linear-gradient(to bottom, #{gtkalpha($c, 0.4)}, #{gtkalpha($c, 0.18)})"
+	);
 	border-color: gtkmix($c, gtkmix($bg, $fg, 0.333), 0.5);
 }
 
@@ -109,52 +112,61 @@
 	}
 
 	@if $t == normal {
-		box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.125);
+		$obg: gtk("@theme_button_background_normal");
+		box-shadow: oxy-raised($obg);
 		text-shadow: none;
 		-gtk-icon-shadow: none;
 
 		color: gtk("@theme_button_foreground_normal");
-		border-color: gtk("@borders");
-		background: gtk("@theme_button_background_normal");
+		border-color: oxy-outline($obg);
+		background-color: $obg;
+		background-image: oxy-gradient($obg, 1.12, 0.94);
 
 		&:backdrop {
-			box-shadow: none;
-			background: gtk("@theme_button_background_normal");
+			box-shadow: oxy-raised-flat($obg);
+			background-color: $obg;
+			background-image: oxy-gradient($obg, 1.05, 0.97);
 		}
 
 		&:checked {
-			background: gtkalpha(
-				gtk("@theme_button_foreground_normal"),
-				0.125
-			);
-			box-shadow: none;
+			background-image: oxy-gradient($obg, 0.88, 0.99);
+			box-shadow: oxy-sunken();
 		}
 
 		&:hover {
 			border-color: gtk("@theme_button_decoration_hover");
 
 			&:not(:checked):not(:active) {
-				background: gtk("@theme_button_background_normal");
+				background-image: oxy-gradient($obg, 1.2, 1);
+				box-shadow: oxy-raised-glow(
+					$obg,
+					gtk("@theme_button_decoration_hover")
+				);
 			}
 		}
 
 		&:active {
-			box-shadow: none;
-			background: gtkalpha(
-				gtk("@theme_button_decoration_hover"),
-				0.333
-			);
+			background-image: oxy-gradient($obg, 0.86, 0.98);
+			box-shadow: oxy-sunken();
 		}
 
 		&:focus {
 			border-color: gtk("@theme_button_decoration_focus");
+
+			&:not(:checked):not(:active) {
+				box-shadow: oxy-raised-glow(
+					$obg,
+					gtk("@theme_button_decoration_focus")
+				);
+			}
 		}
 
 		&:disabled {
 			box-shadow: none;
 			color: gtk("@theme_button_foreground_insensitive");
 			border-color: gtk("@insensitive_borders");
-			background: gtk(
+			background-image: none;
+			background-color: gtk(
 				"@theme_button_background_insensitive"
 			);
 
@@ -166,6 +178,7 @@
 			}
 		}
 	} @else if $t == toolbutton {
+		$tbg: gtk("@theme_button_background_normal");
 		border-color: transparent;
 		background: transparent;
 		background-color: transparent;
@@ -177,34 +190,29 @@
 		-gtk-icon-shadow: none;
 
 		&:checked {
-			border-color: gtkmix(
-				gtk("@theme_button_background_normal"),
-				gtk("@theme_button_foreground_normal"),
-				0.3
-			);
-			background-color: gtkalpha(
-				gtk("@theme_button_foreground_normal"),
-				0.125
-			);
+			border-color: oxy-outline($tbg, 0.75);
+			background-image: oxy-gradient($tbg, 0.88, 0.99);
+			box-shadow: oxy-sunken();
 		}
 
 		&:hover {
 			border-color: gtk("@theme_button_decoration_hover");
 
 			&:not(:checked):not(:active) {
-				background: unset;
+				background-image: oxy-gradient($tbg, 1.15, 0.97);
+				box-shadow: oxy-raised-flat-glow(
+					$tbg,
+					gtk("@theme_button_decoration_hover"),
+					0.3
+				);
 			}
 		}
 
 		&:active {
-
 			border-color: gtk("@theme_button_decoration_hover");
-			background-color: gtkalpha(
-				gtk("@theme_button_decoration_hover"),
-				0.333
-			);
+			background-image: oxy-gradient($tbg, 0.86, 0.98);
+			box-shadow: oxy-sunken();
 		}
-
 
 		&:focus {
 			border-color: gtk("@theme_button_decoration_focus");
@@ -432,7 +440,7 @@ buttonbox.linked:not(.vertical) {
 			// other elements aren't, which looks weird, and we can't really
 			// fix it, so just drop the box shadow in this case.
 			&:not(.combo) {
-				box-shadow: none;
+				box-shadow: oxy-raised-flat(gtk("@theme_button_background_normal"));
 			}
 			@include linked();
 			@include linked-side();
@@ -447,7 +455,7 @@ buttonbox.linked.vertical {
 		entry,
 		button:not(.toggle) {
 			&:not(.combo) {
-				box-shadow: none;
+				box-shadow: oxy-raised-flat(gtk("@theme_button_background_normal"));
 			}
 			@include linked-vertical();
 			@include linked-side-vertical();

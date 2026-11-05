@@ -115,88 +115,88 @@ headerbar,
 
 		&.close {
 			background-image: -gtk-recolor(
-				url("../assets/breeze-close-symbolic.svg"),
+				url("../assets/oxygen-close-symbolic.svg"),
 				color gtk("@theme_text_color")
 			);
 			-gtk-icon-source: none;
 		}
 		&.close:hover {
 			background-image: -gtk-recolor(
-				url("../assets/breeze-close-hover-symbolic.svg")
+				url("../assets/oxygen-close-hover-symbolic.svg")
 			);
 		}
 		&.close:active {
 			background-image: -gtk-recolor(
-				url("../assets/breeze-close-active-symbolic.svg")
+				url("../assets/oxygen-close-active-symbolic.svg")
 			);
 		}
 		&.close:backdrop {
 			background-image: -gtk-recolor(
-				url("../assets/breeze-close-symbolic.svg")
+				url("../assets/oxygen-close-symbolic.svg")
 			);
 		}
 
 		&.maximize {
 			background-image: -gtk-recolor(
-				url("../assets/breeze-maximize-symbolic.svg")
+				url("../assets/oxygen-maximize-symbolic.svg")
 			);
 		}
 		&.maximize:hover {
 			background-image: -gtk-recolor(
-				url("../assets/breeze-maximize-hover-symbolic.svg")
+				url("../assets/oxygen-maximize-hover-symbolic.svg")
 			);
 		}
 		&.maximize:active {
 			background-image: -gtk-recolor(
-				url("../assets/breeze-maximize-active-symbolic.svg")
+				url("../assets/oxygen-maximize-active-symbolic.svg")
 			);
 		}
 		&.maximize:backdrop {
 			background-image: -gtk-recolor(
-				url("../assets/breeze-maximize-symbolic.svg")
+				url("../assets/oxygen-maximize-symbolic.svg")
 			);
 		}
 
 		&.minimize {
 			background-image: -gtk-recolor(
-				url("../assets/breeze-minimize-symbolic.svg")
+				url("../assets/oxygen-minimize-symbolic.svg")
 			);
 		}
 		&.minimize:hover {
 			background-image: -gtk-recolor(
-				url("../assets/breeze-minimize-hover-symbolic.svg")
+				url("../assets/oxygen-minimize-hover-symbolic.svg")
 			);
 		}
 		&.minimize:active {
 			background-image: -gtk-recolor(
-				url("../assets/breeze-minimize-active-symbolic.svg")
+				url("../assets/oxygen-minimize-active-symbolic.svg")
 			);
 		}
 		&.minimize:backdrop {
 			background-image: -gtk-recolor(
-				url("../assets/breeze-minimize-symbolic.svg")
+				url("../assets/oxygen-minimize-symbolic.svg")
 			);
 		}
 
 		.maximized & {
 			&.maximize {
 				background-image: -gtk-recolor(
-					url("../assets/breeze-maximized-symbolic.svg")
+					url("../assets/oxygen-maximized-symbolic.svg")
 				);
 			}
 			&.maximize:hover {
 				background-image: -gtk-recolor(
-					url("../assets/breeze-maximized-hover-symbolic.svg")
+					url("../assets/oxygen-maximized-hover-symbolic.svg")
 				);
 			}
 			&.maximize:active {
 				background-image: -gtk-recolor(
-					url("../assets/breeze-maximized-active-symbolic.svg")
+					url("../assets/oxygen-maximized-active-symbolic.svg")
 				);
 			}
 			&.maximize:backdrop {
 				background-image: -gtk-recolor(
-					url("../assets/breeze-maximized-symbolic.svg")
+					url("../assets/oxygen-maximized-symbolic.svg")
 				);
 			}
 		}

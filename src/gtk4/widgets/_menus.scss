@@ -114,6 +114,7 @@ popover, popover.background {
 
 		&:hover {
 			background-color: gtkalpha(gtk("@theme_selected_bg_color"), 0.3);
+			background-image: oxy-tint-gradient(gtk("@theme_selected_bg_color"));
 			border: 1px solid gtk("@theme_button_decoration_focus"); // Use px to avoid strange thickness when fractional scaling is used
 			border-radius: $r;
 		}

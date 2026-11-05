@@ -148,16 +148,16 @@ class Color(object):
 
     def gradient(self, state='', alpha=1.0):
         if state == 'active':
-            stop1 = self._lighter(self.rgb, 0.03)
-            stop2 = self._darker(self.rgb, 0.10)
+            stop1 = self._darker(self.rgb, 0.08)
+            stop2 = self._lighter(self.rgb, 0.02)
             linear = cairo.LinearGradient(1, 1, 1, 19)
             linear.add_color_stop_rgba(
                 0.0, stop1[0], stop1[1], stop1[2], alpha)
             linear.add_color_stop_rgba(
                 1.0, stop2[0], stop2[1], stop2[2], alpha)
         else:
-            stop1 = self._lighter(self.rgb, 0.01)
-            stop2 = self._darker(self.rgb, 0.03)
+            stop1 = self._lighter(self.rgb, 0.10)
+            stop2 = self._darker(self.rgb, 0.05)
             linear = cairo.LinearGradient(1, 1, 1, 19)
             linear.add_color_stop_rgba(
                 0.0, stop1[0], stop1[1], stop1[2], alpha)
@@ -482,11 +482,11 @@ def scrollbar_slider(color1, color2, color3):
         slider.save('scrollbar-slider-horizontal-active' + ending)
 
         slider = Assets(30, 20, scl)
-        slider.rounded_rectancle(color2, 30, 6, 0, 7, 3, 1)
+        slider.rounded_rectancle(color2, 30, 8, 0, 6, 4, 1)
         slider.save('scrollbar-slider-horizontal-hover' + ending)
 
         slider = Assets(30, 20, scl)
-        slider.rounded_rectancle(color3, 30, 6, 0, 7, 3, 0.4)
+        slider.rounded_rectancle(color3, 30, 8, 0, 6, 4, 0.6)
         slider.save('scrollbar-slider-horizontal' + ending)
 
         slider = Assets(20, 30, scl)
@@ -494,11 +494,11 @@ def scrollbar_slider(color1, color2, color3):
         slider.save('scrollbar-slider-vertical-active' + ending)
 
         slider = Assets(20, 30, scl)
-        slider.rounded_rectancle(color2, 6, 30, 7, 0, 3, 1)
+        slider.rounded_rectancle(color2, 8, 30, 6, 0, 4, 1)
         slider.save('scrollbar-slider-vertical-hover' + ending)
 
         slider = Assets(20, 30, scl)
-        slider.rounded_rectancle(color3, 6, 30, 7, 0, 3, 0.4)
+        slider.rounded_rectancle(color3, 8, 30, 6, 0, 4, 0.6)
         slider.save('scrollbar-slider-vertical' + ending)
 
 
@@ -509,11 +509,11 @@ def scrollbar_trough(color):
         else:
             ending = '.png'
         trough = Assets(56, 20, scl)
-        trough.rounded_rectancle(color, 49, 6, 3.5, 7, 3, 0.3)
+        trough.rounded_rectancle(color, 49, 8, 3.5, 6, 4, 0.4)
         trough.save('scrollbar-trough-horizontal' + ending)
 
         trough = Assets(20, 56, scl)
-        trough.rounded_rectancle(color, 6, 49, 7, 3.5, 3, 0.3)
+        trough.rounded_rectancle(color, 8, 49, 6, 3.5, 4, 0.4)
         trough.save('scrollbar-trough-vertical' + ending)
 
 
@@ -690,7 +690,7 @@ def mix(color, mix_color, amount):
 
 
 parser = argparse.ArgumentParser(
-    description='Generates Breeze assets according to the specified color '
+    description='Generates Oxygen assets according to the specified color '
                 'scheme.')
 parser.add_argument('--colorscheme', '-c', action='store',
                     default='/usr/share/color-schemes/BreezeLight.colors',
@@ -812,8 +812,8 @@ toolbar(border_color.rgb, window_bg.rgb, button_hover.rgb)
 
 gtk2 = open(os.path.join(args.gtk2_dir, 'gtkrc'), 'w')
 gtk2.write(
-    '# Theme:       Breeze-gtk\n'
-    '# Description: Breeze theme for GTK+2.0\n'
+    '# Theme:       Oxygen-gtk\n'
+    '# Description: Oxygen-style theme for GTK+2.0\n'
     '\n'
     'gtk-color-scheme = "text_color:' + html(window_fg.rgb) + '"\n'
     'gtk-color-scheme = "base_color:' + html(view_bg.rgb) + '"\n'

@@ -8,7 +8,7 @@ $BorderContrastDecimal: 0.2;
 
 // escape string entirely
 @function gtk($str) {
-	@return unquote("#{$str}_breeze");
+	@return unquote("#{$str}_oxygen");
 }
 
 // alpha function
@@ -18,7 +18,7 @@ $BorderContrastDecimal: 0.2;
 
 // shade function
 @function gtkshade($c, $a) {
-	@return unquote("shade(#{$c}_breeze,#{$a})");
+	@return unquote("shade(#{$c}_oxygen,#{$a})");
 }
 
 // mix function
@@ -258,9 +258,9 @@ $IntensityEffect: (
 	Inactive: $InactiveIntensityEffect,
 );
 
-$r: 1.25mm; // standard radius
+$r: 4px; // standard radius (Oxygen uses slightly tighter corners)
 
-$window-border-radius: 5px;
+$window-border-radius: 4px;
 
 @function internal_insensitive($c) {
 	@return internal_Color(

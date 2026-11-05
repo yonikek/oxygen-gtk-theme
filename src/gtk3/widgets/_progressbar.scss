@@ -8,14 +8,14 @@ progressbar {
 	&.horizontal {
 		trough,
 		progress {
-			min-height: 4px;
+			min-height: 10px;
 		}
 	}
 
 	&.vertical {
 		trough,
 		progress {
-			min-width: 4px;
+			min-width: 10px;
 		}
 	}
 
@@ -34,30 +34,24 @@ progressbar {
 			gtkalpha(gtk("@theme_button_foreground_normal"), 0.5*0.2)
 		);
 
-		border-color: gtkalpha(
-			gtk("@theme_button_foreground_normal"),
-			0.2
-		);
+		border-color: oxy-outline(gtk("@theme_bg_color"), 0.7);
+		box-shadow: oxy-field();
 	}
 
 	progress {
 		border: 1px solid;
 		margin: -1px;
 		border-radius: $r;
-		box-shadow: none; //needed for clipping
-		background: gtkoverlay(
-			gtk("@theme_bg_color"),
-			gtkalpha(gtk("@theme_button_decoration_hover"), 0.5)
-		);
+		box-shadow: inset 0 1px 0 oxy-bevel(gtk("@theme_selected_bg_color"), 1.4);
+		background-color: gtk("@theme_selected_bg_color");
+		background-image: oxy-gradient(gtk("@theme_selected_bg_color"), 1.2, 0.92);
 
-		border: 1px solid gtk("@theme_button_decoration_hover");
+		border: 1px solid oxy-outline(gtk("@theme_selected_bg_color"), 0.7);
 	}
 
 	&:backdrop progress {
-		background: gtkoverlay(
-			gtk("@theme_bg_color"),
-			gtkalpha(gtk("@theme_unfocused_selected_bg_color"), 0.5)
-		);
+		background-color: gtk("@theme_unfocused_selected_bg_color");
+		background-image: oxy-gradient(gtk("@theme_unfocused_selected_bg_color"), 1.1, 0.95);
 
 		border-color: gtk(
 			"@theme_unfocused_selected_bg_color"

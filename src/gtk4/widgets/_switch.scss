@@ -22,8 +22,10 @@ switch {
 		0.222
 	);
 	text-shadow: none;
+	box-shadow: oxy-field();
 
 	&:disabled {
+		box-shadow: none;
 		background-color: gtkalpha(
 			gtk("@theme_button_foreground_normal"),
 			0.03
@@ -65,9 +67,10 @@ switch {
 		border: 1px solid;
 		border-radius: $switch-height / 2;
 
-		box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.125);
-		border-color: gtk("@borders");
-		background: gtk("@theme_button_background_normal");
+		box-shadow: oxy-raised(gtk("@theme_button_background_normal"));
+		border-color: oxy-outline(gtk("@theme_button_background_normal"));
+		background-color: gtk("@theme_button_background_normal");
+		background-image: oxy-gradient(gtk("@theme_button_background_normal"), 1.12, 0.94);
 	}
 
 	&:hover slider {

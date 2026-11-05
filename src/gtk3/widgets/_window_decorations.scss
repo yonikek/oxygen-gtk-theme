@@ -91,7 +91,7 @@ window {
 				background-repeat: no-repeat;
 				background-size: $titlebutton-size;
 				background-image: -gtk-recolor(
-					url("../assets/breeze-close-symbolic.svg"),
+					url("../assets/oxygen-close-symbolic.svg"),
 					color gtk("@theme_text_color")
 				);
 				-gtk-icon-source: none;
@@ -100,21 +100,21 @@ window {
 				border-color: transparent;
 				background-color: transparent;
 				background-image: -gtk-recolor(
-					url("../assets/breeze-close-hover-symbolic.svg")
+					url("../assets/oxygen-close-hover-symbolic.svg")
 				);
 			}
 			&.close:active {
 				border-color: transparent;
 				background-color: transparent;
 				background-image: -gtk-recolor(
-					url("../assets/breeze-close-active-symbolic.svg")
+					url("../assets/oxygen-close-active-symbolic.svg")
 				);
 			}
 			&.close:backdrop {
 				border-color: transparent;
 				background-color: transparent;
 				background-image: -gtk-recolor(
-					url("../assets/breeze-close-symbolic.svg")
+					url("../assets/oxygen-close-symbolic.svg")
 				);
 			}
 
@@ -125,28 +125,28 @@ window {
 				background-repeat: no-repeat;
 				background-size: $titlebutton-size;
 				background-image: -gtk-recolor(
-					url("../assets/breeze-maximize-symbolic.svg")
+					url("../assets/oxygen-maximize-symbolic.svg")
 				);
 			}
 			&.maximize:hover {
 				border-color: transparent;
 				background-color: transparent;
 				background-image: -gtk-recolor(
-					url("../assets/breeze-maximize-hover-symbolic.svg")
+					url("../assets/oxygen-maximize-hover-symbolic.svg")
 				);
 			}
 			&.maximize:active {
 				border-color: transparent;
 				background-color: transparent;
 				background-image: -gtk-recolor(
-					url("../assets/breeze-maximize-active-symbolic.svg")
+					url("../assets/oxygen-maximize-active-symbolic.svg")
 				);
 			}
 			&.maximize:backdrop {
 				border-color: transparent;
 				background-color: transparent;
 				background-image: -gtk-recolor(
-					url("../assets/breeze-maximize-symbolic.svg")
+					url("../assets/oxygen-maximize-symbolic.svg")
 				);
 			}
 
@@ -157,28 +157,28 @@ window {
 				background-repeat: no-repeat;
 				background-size: $titlebutton-size;
 				background-image: -gtk-recolor(
-					url("../assets/breeze-minimize-symbolic.svg")
+					url("../assets/oxygen-minimize-symbolic.svg")
 				);
 			}
 			&.minimize:hover {
 				border-color: transparent;
 				background-color: transparent;
 				background-image: -gtk-recolor(
-					url("../assets/breeze-minimize-hover-symbolic.svg")
+					url("../assets/oxygen-minimize-hover-symbolic.svg")
 				);
 			}
 			&.minimize:active {
 				border-color: transparent;
 				background-color: transparent;
 				background-image: -gtk-recolor(
-					url("../assets/breeze-minimize-active-symbolic.svg")
+					url("../assets/oxygen-minimize-active-symbolic.svg")
 				);
 			}
 			&.minimize:backdrop {
 				border-color: transparent;
 				background-color: transparent;
 				background-image: -gtk-recolor(
-					url("../assets/breeze-minimize-symbolic.svg")
+					url("../assets/oxygen-minimize-symbolic.svg")
 				);
 			}
 		}
@@ -192,28 +192,28 @@ window {
 					background-size: $titlebutton-size;
 					background-repeat: no-repeat;
 					background-image: -gtk-recolor(
-						url("../assets/breeze-maximized-symbolic.svg")
+						url("../assets/oxygen-maximized-symbolic.svg")
 					);
 				}
 				&.maximize:hover {
 					border-color: transparent;
 					background-color: transparent;
 					background-image: -gtk-recolor(
-						url("../assets/breeze-maximized-hover-symbolic.svg")
+						url("../assets/oxygen-maximized-hover-symbolic.svg")
 					);
 				}
 				&.maximize:active {
 					border-color: transparent;
 					background-color: transparent;
 					background-image: -gtk-recolor(
-						url("../assets/breeze-maximized-active-symbolic.svg")
+						url("../assets/oxygen-maximized-active-symbolic.svg")
 					);
 				}
 				&.maximize:backdrop {
 					border-color: transparent;
 					background-color: transparent;
 					background-image: -gtk-recolor(
-						url("../assets/breeze-maximized-symbolic.svg")
+						url("../assets/oxygen-maximized-symbolic.svg")
 					);
 				}
 			}

@@ -58,7 +58,7 @@ COLOR_SCHEME_ROOT="/usr/share/color-schemes"
 while [ "$#" -gt 0 ]; do
   case "$1" in
     -h|--help)
-      echo "$0: build Breeze theme"
+      echo "$0: build Oxygen GTK theme"
       echo "Usage: $0 [-c COLOR_SCHEME] [-r COLOR_SCHEME_ROOT] [-t TARGET_DIRECTORY]"
       echo
       echo "Arguments:"
@@ -89,7 +89,7 @@ while [ "$#" -gt 0 ]; do
 done
 
 if [ -z "${COLOR_SCHEME}" ]; then
-  THEME_NAME="Breeze"
+  THEME_NAME="Oxygen"
   if [ -f "${HOME}/.config/kdeglobals" ]; then
     COLOR_SCHEME="${HOME}/.config/kdeglobals"
   else

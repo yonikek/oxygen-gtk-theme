@@ -1,0 +1,79 @@
+@charset "UTF-8";
+
+// Oxygen look helpers
+// -------------------
+// Oxygen's character comes from lit gradients, a dark 1px outline, a light
+// inner bevel and soft glows in the scheme's hover/focus colours. Everything
+// below is expressed with GTK colour functions on the exported named colours,
+// so the theme keeps following the KDE colour scheme it was generated from.
+
+// vertical gradient built from one colour: $top/$bottom are shade() factors
+@function oxy-gradient($c, $top: 1.1, $bottom: 0.95) {
+	@return unquote(
+		"linear-gradient(to bottom, shade(#{$c}, #{$top}), shade(#{$c}, #{$bottom}))"
+	);
+}
+
+// dark outline derived from a surface colour
+@function oxy-outline($c, $f: 0.62) {
+	@return unquote("shade(#{$c}, #{$f})");
+}
+
+// light bevel colour derived from a surface colour
+@function oxy-bevel($c, $f: 1.3) {
+	@return unquote("shade(#{$c}, #{$f})");
+}
+
+// raised surface shadow: inner top highlight + soft drop shadow
+@function oxy-raised($c) {
+	@return unquote(
+		"inset 0 1px 0 #{oxy-bevel($c)}, 0 1px 2px rgba(0, 0, 0, 0.18)"
+	);
+}
+
+// raised surface without the drop shadow (linked buttons, headerbars)
+@function oxy-raised-flat($c) {
+	@return unquote("inset 0 1px 0 #{oxy-bevel($c)}");
+}
+
+// pressed / sunken surface
+@function oxy-sunken() {
+	@return unquote(
+		"inset 0 1px 3px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(0, 0, 0, 0.06)"
+	);
+}
+
+// coloured glow used for hover and focus
+@function oxy-glow($c, $a: 0.4) {
+	@return unquote("0 0 0 1px #{gtkalpha($c, $a)}");
+}
+
+// inset field shadow used for entries and troughs
+@function oxy-field() {
+	@return unquote("inset 0 1px 2px rgba(0, 0, 0, 0.18)");
+}
+
+// raised surface with a coloured glow ring (hover / focus)
+@function oxy-raised-glow($c, $glow, $a: 0.4) {
+	@return unquote("#{oxy-raised($c)}, #{oxy-glow($glow, $a)}");
+}
+@function oxy-raised-flat-glow($c, $glow, $a: 0.4) {
+	@return unquote("#{oxy-raised-flat($c)}, #{oxy-glow($glow, $a)}");
+}
+@function oxy-field-glow($glow, $a: 0.45) {
+	@return unquote("#{oxy-field()}, #{oxy-glow($glow, $a)}");
+}
+
+// translucent highlight gradient (menu items, hover tiles)
+@function oxy-tint-gradient($c, $top: 0.55, $bottom: 0.25) {
+	@return unquote(
+		"linear-gradient(to bottom, #{gtkalpha($c, $top)}, #{gtkalpha($c, $bottom)})"
+	);
+}
+
+// inactive notebook tab: translucent foreground tint, darker towards the bottom
+@function oxy-tab-gradient($fg) {
+	@return unquote(
+		"linear-gradient(to bottom, #{gtkalpha($fg, 0.12)}, #{gtkalpha($fg, 0.26)})"
+	);
+}
