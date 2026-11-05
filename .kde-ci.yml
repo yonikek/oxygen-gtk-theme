@@ -1,0 +1,9 @@
+Dependencies:
+ - 'on': ['Linux', 'FreeBSD']
+   'require':
+    'frameworks/extra-cmake-modules': '@stable'
+    'plasma/breeze': '@same'
+
+Options:
+ require-passing-tests-on: ['@all']
+ enable-lsan: True
