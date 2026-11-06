@@ -14,6 +14,8 @@ create_folders () {
 build_sass() {
   if command -v sassc >/dev/null 2>&1; then
       sassc -I "$3" "$1" "$2"
+  elif sass --version 2>/dev/null | grep -qi dart; then
+      sass --no-source-map -I "$3" "$1" "$2"
   else
       sass -I "$3" --cache-location /tmp/sass-cache "$1" "$2"
   fi
