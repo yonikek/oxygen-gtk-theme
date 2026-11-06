@@ -248,7 +248,9 @@ class Assets(object):
         self.cr.line_to(shiftx + 6, shifty + 3)
         self.cr.line_to(shiftx + 11, shifty + 8)
         self.cr.set_source_rgba(color[0], color[1], color[2], alpha)
-        self.cr.set_line_width(1.0)
+        self.cr.set_line_width(1.6)
+        self.cr.set_line_cap(cairo.LINE_CAP_ROUND)
+        self.cr.set_line_join(cairo.LINE_JOIN_ROUND)
         self.cr.stroke()
 
     def arrow_small(self, color, alpha=1.0):
@@ -300,50 +302,62 @@ class Assets(object):
         self.cr.fill()
 
     def minimize(self, color=None):
-        self.cr.move_to(4, 7)
-        self.cr.line_to(9, 12)
-        self.cr.line_to(14, 7)
+        self.cr.move_to(6, 8)
+        self.cr.line_to(9, 11)
+        self.cr.line_to(12, 8)
         if color is None:
             self.cr.set_operator(cairo.OPERATOR_CLEAR)
         else:
             self.cr.set_source_rgb(color[0], color[1], color[2])
-        self.cr.set_line_width(1.0)
+        self.cr.set_line_width(1.1)
+        self.cr.set_line_cap(cairo.LINE_CAP_ROUND)
+        self.cr.set_line_join(cairo.LINE_JOIN_ROUND)
+        
         self.cr.stroke()
 
     def maximize(self, color=None):
-        self.cr.move_to(4, 11)
-        self.cr.line_to(9, 6)
-        self.cr.line_to(14, 11)
+        self.cr.move_to(6, 10)
+        self.cr.line_to(9, 7)
+        self.cr.line_to(12, 10)
         if color is None:
             self.cr.set_operator(cairo.OPERATOR_CLEAR)
         else:
             self.cr.set_source_rgb(color[0], color[1], color[2])
-        self.cr.set_line_width(1.0)
+        self.cr.set_line_width(1.1)
+        self.cr.set_line_cap(cairo.LINE_CAP_ROUND)
+        self.cr.set_line_join(cairo.LINE_JOIN_ROUND)
+        
         self.cr.stroke()
 
     def maximize_maximized(self, color=None):
-        self.cr.move_to(4.5, 9)
-        self.cr.line_to(9, 4.5)
-        self.cr.line_to(13.5, 9)
-        self.cr.line_to(9, 13.5)
+        self.cr.move_to(6, 9)
+        self.cr.line_to(9, 6)
+        self.cr.line_to(12, 9)
+        self.cr.line_to(9, 12)
         self.cr.close_path()
         if color is None:
             self.cr.set_operator(cairo.OPERATOR_CLEAR)
         else:
             self.cr.set_source_rgb(color[0], color[1], color[2])
-        self.cr.set_line_width(1.0)
+        self.cr.set_line_width(1.1)
+        self.cr.set_line_cap(cairo.LINE_CAP_ROUND)
+        self.cr.set_line_join(cairo.LINE_JOIN_ROUND)
+        
         self.cr.stroke()
 
     def close(self, color=None):
-        self.cr.move_to(5, 5)
-        self.cr.line_to(13, 13)
-        self.cr.move_to(13, 5)
-        self.cr.line_to(5, 13)
+        self.cr.move_to(6.5, 6.5)
+        self.cr.line_to(11.5, 11.5)
+        self.cr.move_to(11.5, 6.5)
+        self.cr.line_to(6.5, 11.5)
         if color is None:
             self.cr.set_operator(cairo.OPERATOR_CLEAR)
         else:
             self.cr.set_source_rgb(color[0], color[1], color[2])
-        self.cr.set_line_width(1.0)
+        self.cr.set_line_width(1.1)
+        self.cr.set_line_cap(cairo.LINE_CAP_ROUND)
+        self.cr.set_line_join(cairo.LINE_JOIN_ROUND)
+        
         self.cr.stroke()
 
     def save(self, filename):

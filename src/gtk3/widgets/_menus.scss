@@ -114,14 +114,12 @@ menu,
 			min-width: 4mm;
 
 			&:dir(ltr) {
-				-gtk-icon-source: -gtk-icontheme($arrow_right);
+				-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-right-symbolic.svg"));
 				margin-left: 2.5mm;
 			}
 
 			&:dir(rtl) {
-				-gtk-icon-source: -gtk-icontheme(
-					"go-next-rtl-symbolic"
-				);
+				-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-left-symbolic.svg"));
 				margin-right: 2.5mm;
 			}
 		}
@@ -138,13 +136,13 @@ menu,
 		&.top {
 			margin-top: -1.5mm;
 			border: none;
-			-gtk-icon-source: -gtk-icontheme($arrow_up);
+			-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-up-symbolic.svg"));
 		}
 
 		&.bottom {
 			margin-bottom: -1.5mm;
 			border: none;
-			-gtk-icon-source: -gtk-icontheme($arrow_down);
+			-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-down-symbolic.svg"));
 		}
 
 		&:hover {
@@ -232,11 +230,11 @@ modelbutton.flat arrow {
 	}
 
 	&.left {
-		-gtk-icon-source: -gtk-icontheme($arrow_left);
+		-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-left-symbolic.svg"));
 	}
 
 	&.right {
-		-gtk-icon-source: -gtk-icontheme($arrow_right);
+		-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-right-symbolic.svg"));
 	}
 }
 

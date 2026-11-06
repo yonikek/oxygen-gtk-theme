@@ -10,10 +10,13 @@ decoration {
 	//border: 1px solid transparent;
 	border-radius: $window-border-radius $window-border-radius 0 0;
 	border-width: 0px;
-	box-shadow: oxy-frame-ring(gtk("@theme_bg_color"));
+	box-shadow: oxy-window-glow(
+		gtk("@theme_bg_color"),
+		gtk("@theme_selected_bg_color")
+	);
 
 	&:backdrop {
-		box-shadow: oxy-frame-ring-backdrop(gtk("@theme_bg_color"));
+		box-shadow: oxy-window-shadow(gtk("@theme_bg_color"));
 	}
 
 	/* this is used for the resize cursor area */
@@ -43,7 +46,14 @@ decoration {
 			box-shadow: none;
 		}
 		&.message-dialog {
-			box-shadow: 0 2px 6px 1px rgba(0, 0, 0, 0.5);
+			box-shadow: oxy-window-glow(
+				gtk("@theme_bg_color"),
+				gtk("@theme_selected_bg_color")
+			);
+
+			&:backdrop {
+				box-shadow: oxy-window-shadow(gtk("@theme_bg_color"));
+			}
 		}
 	}
 	.solid-csd & {
@@ -75,150 +85,15 @@ window {
 	}
 	headerbar,
 	.titlebar {
-		&.default-decoration button.titlebutton {
-			padding: 1px;
-			min-height: 18px;
-			min-width: 18px;
-			margin: 0;
-		}
-		$titlebutton-size: 18px 18px;
 		button.titlebutton {
-			image {
-				color: transparent;
-			}
-
 			&.close {
-				border-image: none;
-				box-shadow: none;
-				background-position: center;
-				background-repeat: no-repeat;
-				background-size: $titlebutton-size;
-				background-image: -gtk-recolor(
-					url("../assets/oxygen-close-symbolic.svg"),
-					color gtk("@theme_text_color")
-				);
-				-gtk-icon-source: none;
+				@include oxy-titlebutton(close, gtk("@error_color"));
 			}
-			&.close:hover {
-				border-color: transparent;
-				background-color: transparent;
-				background-image: -gtk-recolor(
-					url("../assets/oxygen-close-hover-symbolic.svg")
-				);
-			}
-			&.close:active {
-				border-color: transparent;
-				background-color: transparent;
-				background-image: -gtk-recolor(
-					url("../assets/oxygen-close-active-symbolic.svg")
-				);
-			}
-			&.close:backdrop {
-				border-color: transparent;
-				background-color: transparent;
-				background-image: -gtk-recolor(
-					url("../assets/oxygen-close-symbolic.svg")
-				);
-			}
-
-			&.maximize {
-				border-image: none;
-				box-shadow: none;
-				background-position: center;
-				background-repeat: no-repeat;
-				background-size: $titlebutton-size;
-				background-image: -gtk-recolor(
-					url("../assets/oxygen-maximize-symbolic.svg")
-				);
-			}
-			&.maximize:hover {
-				border-color: transparent;
-				background-color: transparent;
-				background-image: -gtk-recolor(
-					url("../assets/oxygen-maximize-hover-symbolic.svg")
-				);
-			}
-			&.maximize:active {
-				border-color: transparent;
-				background-color: transparent;
-				background-image: -gtk-recolor(
-					url("../assets/oxygen-maximize-active-symbolic.svg")
-				);
-			}
-			&.maximize:backdrop {
-				border-color: transparent;
-				background-color: transparent;
-				background-image: -gtk-recolor(
-					url("../assets/oxygen-maximize-symbolic.svg")
-				);
-			}
-
 			&.minimize {
-				border-image: none;
-				box-shadow: none;
-				background-position: center;
-				background-repeat: no-repeat;
-				background-size: $titlebutton-size;
-				background-image: -gtk-recolor(
-					url("../assets/oxygen-minimize-symbolic.svg")
-				);
+				@include oxy-titlebutton(minimize);
 			}
-			&.minimize:hover {
-				border-color: transparent;
-				background-color: transparent;
-				background-image: -gtk-recolor(
-					url("../assets/oxygen-minimize-hover-symbolic.svg")
-				);
-			}
-			&.minimize:active {
-				border-color: transparent;
-				background-color: transparent;
-				background-image: -gtk-recolor(
-					url("../assets/oxygen-minimize-active-symbolic.svg")
-				);
-			}
-			&.minimize:backdrop {
-				border-color: transparent;
-				background-color: transparent;
-				background-image: -gtk-recolor(
-					url("../assets/oxygen-minimize-symbolic.svg")
-				);
-			}
-		}
-
-		.maximized & {
-			button.titlebutton {
-				&.maximize {
-					border-image: none;
-					box-shadow: none;
-					background-position: center;
-					background-size: $titlebutton-size;
-					background-repeat: no-repeat;
-					background-image: -gtk-recolor(
-						url("../assets/oxygen-maximized-symbolic.svg")
-					);
-				}
-				&.maximize:hover {
-					border-color: transparent;
-					background-color: transparent;
-					background-image: -gtk-recolor(
-						url("../assets/oxygen-maximized-hover-symbolic.svg")
-					);
-				}
-				&.maximize:active {
-					border-color: transparent;
-					background-color: transparent;
-					background-image: -gtk-recolor(
-						url("../assets/oxygen-maximized-active-symbolic.svg")
-					);
-				}
-				&.maximize:backdrop {
-					border-color: transparent;
-					background-color: transparent;
-					background-image: -gtk-recolor(
-						url("../assets/oxygen-maximized-symbolic.svg")
-					);
-				}
+			&.maximize {
+				@include oxy-titlebutton(maximize);
 			}
 		}
 	}
@@ -229,5 +104,16 @@ window {
 		&:backdrop {
 			-gtk-icon-shadow: none;
 		}
+	}
+}
+
+// restore glyph on maximised windows (the class sits on the window, and
+// depending on the toolkit version on the titlebar itself)
+.maximized headerbar,
+.maximized .titlebar,
+headerbar.maximized,
+.titlebar.maximized {
+	button.titlebutton.maximize {
+		@include oxy-titlebutton(maximized);
 	}
 }

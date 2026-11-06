@@ -108,11 +108,11 @@ popover, popover.background {
 		}
 
 		arrow.left {
-			-gtk-icon-source: -gtk-icontheme($arrow_left);
+			-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-left-symbolic.svg"));
 		}
 
 		arrow.right {
-			-gtk-icon-source: -gtk-icontheme($arrow_right);
+			-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-right-symbolic.svg"));
 		}
 
 		&:hover {

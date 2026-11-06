@@ -130,12 +130,10 @@ treeview.view {
 		// GtkTreeView uses the larger of the expander’s min-width and min-height
 		min-width: 16px;
 		min-height: 16px;
-		-gtk-icon-source: -gtk-icontheme($arrow_right);
+		-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-right-symbolic.svg"));
 		color: gtk("@theme_fg_color");
 		&:dir(rtl) {
-			-gtk-icon-source: -gtk-icontheme(
-				"go-next-rtl-symbolic"
-			);
+			-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-left-symbolic.svg"));
 		}
 		&:hover {
 			color: gtk("@theme_button_decoration_hover");
@@ -144,7 +142,7 @@ treeview.view {
 			color: gtk("@theme_selected_fg_color");
 		}
 		&:checked {
-			-gtk-icon-source: -gtk-icontheme($arrow_down);
+			-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-down-symbolic.svg"));
 			&:selected {
 				color: gtk("@theme_selected_fg_color");
 			}

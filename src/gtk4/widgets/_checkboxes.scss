@@ -106,7 +106,7 @@ radio {
 check{
 	border-radius: $r;
 	&:checked {
-		-gtk-icon-source: -gtk-recolor(url("../assets/checkmark-symbolic.svg"));
+		-gtk-icon-source: -gtk-recolor(url("../assets/checkmark-symbolic.svg"), warning oxy-bevel(gtk("@theme_button_background_normal"), 1.6));
 	}
 	&:indeterminate {
 		-gtk-icon-source: -gtk-recolor(url("../assets/dash-symbolic.svg"));
@@ -115,7 +115,7 @@ check{
 radio {
    border-radius: 50%;
    &:checked {
-        -gtk-icon-source: -gtk-recolor(url("../assets/bullet-symbolic.svg"));
+        -gtk-icon-source: -gtk-recolor(url("../assets/bullet-symbolic.svg"), warning oxy-bevel(gtk("@theme_button_background_normal"), 1.6));
    }
 	&:indeterminate {
 		-gtk-icon-source: -gtk-recolor(url("../assets/dash-symbolic.svg"));

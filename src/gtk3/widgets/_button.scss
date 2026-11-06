@@ -397,7 +397,7 @@ button {
  **************/
 combobox {
 	arrow {
-		-gtk-icon-source: -gtk-icontheme($arrow_down);
+		-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-down-symbolic.svg"));
 		min-height: 16px;
 		min-width: 16px;
 	}

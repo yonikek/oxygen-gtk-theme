@@ -270,11 +270,11 @@ notebook {
 			padding-right: 4px;
 
 			&.down {
-				-gtk-icon-source: -gtk-icontheme($arrow_left);
+				-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-left-symbolic.svg"));
 			}
 
 			&.up {
-				-gtk-icon-source: -gtk-icontheme($arrow_right);
+				-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-right-symbolic.svg"));
 			}
 		}
 
@@ -297,11 +297,11 @@ notebook {
 			padding-bottom: 4px;
 
 			&.down {
-				-gtk-icon-source: -gtk-icontheme($arrow_up);
+				-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-up-symbolic.svg"));
 			}
 
 			&.up {
-				-gtk-icon-source: -gtk-icontheme($arrow_down);
+				-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-down-symbolic.svg"));
 			}
 		}
 

@@ -103,16 +103,97 @@
 	);
 }
 
-// window frame: dark hairline ring drawn by the decoration node
-@function oxy-frame-ring($c) {
+// Active window: Oxygen's accent glow. Its shadow cache paints two gaussian
+// halos in the accent colour (a tight bright one using the accent lightened by
+// 40% and a wide soft one), inside a dark hairline frame. The accent is the
+// scheme's selection colour, exactly like Plasma's accent colour.
+@function oxy-window-glow($bg, $accent) {
 	@return unquote(
-		"0 0 0 1px alpha(shade(#{$c}, 0.45), 0.9), 0 0 0 2px alpha(shade(#{$c}, 0.75), 0.5), 0 2px 12px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.25)"
+		"0 0 0 1px alpha(shade(#{$bg}, 0.45), 0.9), 0 0 0 2px alpha(shade(#{$bg}, 0.75), 0.5), 0 0 8px 2px alpha(mix(#{$accent}, white, 0.6), 0.85), 0 0 30px 8px alpha(#{$accent}, 0.5)"
 	);
 }
 
-// lighter window frame ring for backdrop windows
-@function oxy-frame-ring-backdrop($c) {
+// Inactive window: Oxygen drops the glow and uses a plain, soft dark shadow.
+@function oxy-window-shadow($bg) {
 	@return unquote(
-		"0 0 0 1px alpha(shade(#{$c}, 0.55), 0.7), 0 1px 8px rgba(0, 0, 0, 0.18)"
+		"0 0 0 1px alpha(shade(#{$bg}, 0.55), 0.7), 0 4px 18px 2px rgba(0, 0, 0, 0.38)"
 	);
+}
+
+// Window controls, after Oxygen's title bar buttons (StyleHelper::
+// dockWidgetButton and Style::renderTitleBarButton): a sunken ring that is
+// dark at the top and light at the bottom, and a glyph with a light emboss
+// copy below it.
+@function oxy-wc-ring($bg, $a: 0.6) {
+	@return unquote(
+		"inset 0 0 0 1px alpha(shade(#{$bg}, 0.5), #{$a}), 0 1px 0 alpha(shade(#{$bg}, 1.6), 0.8)"
+	);
+}
+@function oxy-wc-ring-pressed($bg) {
+	@return unquote(
+		"inset 0 1px 3px alpha(shade(#{$bg}, 0.3), 0.6), inset 0 0 0 1px alpha(shade(#{$bg}, 0.5), 0.7), 0 1px 0 alpha(shade(#{$bg}, 1.6), 0.8)"
+	);
+}
+
+// $glyph: close | minimize | maximize | maximized
+// $hover: the glyph colour on hover (Oxygen: scheme hover colour, red for close)
+@mixin oxy-titlebutton($glyph, $hover: gtk("@theme_button_decoration_hover")) {
+	$tb_bg: gtk("@theme_titlebar_background");
+	$tb_img: -gtk-recolor(
+		url("../assets/oxygen-#{$glyph}-symbolic.svg"),
+		warning oxy-bevel($tb_bg, 1.6)
+	);
+
+	min-width: 18px;
+	min-height: 18px;
+	margin: 0 2px;
+	padding: 0;
+	border: none;
+	border-radius: 50%;
+	border-image: none;
+	-gtk-icon-source: none;
+	text-shadow: none;
+	-gtk-icon-shadow: none;
+	color: gtk("@theme_titlebar_foreground");
+	background-color: transparent;
+	background-image: $tb_img;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 18px 18px;
+	box-shadow: oxy-wc-ring($tb_bg);
+
+	// hide the stock icon, the glyph is drawn as the background
+	image {
+		color: transparent;
+	}
+
+	&:hover,
+	&:hover:not(:checked):not(:active) {
+		color: $hover;
+		background-color: transparent;
+		background-image: $tb_img;
+		box-shadow: oxy-wc-ring($tb_bg);
+	}
+
+	&:active,
+	&:active:hover {
+		color: $hover;
+		background-color: transparent;
+		background-image: $tb_img;
+		box-shadow: oxy-wc-ring-pressed($tb_bg);
+	}
+
+	&:focus,
+	&:focus:not(:checked):not(:active) {
+		background-image: $tb_img;
+		box-shadow: oxy-wc-ring($tb_bg);
+	}
+
+	&:backdrop,
+	&:backdrop:hover {
+		color: gtk("@theme_titlebar_foreground_backdrop");
+		background-color: transparent;
+		background-image: $tb_img;
+		box-shadow: oxy-wc-ring($tb_bg, 0.35);
+	}
 }

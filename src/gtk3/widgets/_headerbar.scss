@@ -149,7 +149,7 @@ headerbar {
 			}
 
 			.arrow {
-				-gtk-icon-source: -gtk-icontheme($arrow_down);
+				-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-down-symbolic.svg"));
 				-gtk-icon-shadow: none;
 			}
 		}

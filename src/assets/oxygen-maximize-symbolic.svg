@@ -1,17 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   id="svg3"
-   version="1.1"
-   width="36"
-   height="36"
-   viewBox="0 0 36 36"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <path
-     id="glyph"
-     d="M 11,11 H 25 V 25 H 11 Z M 13.6,13.6 V 22.4 H 22.4 V 13.6 Z"
-     color="#000000"
-     fill="#fefefe"
-     image-rendering="auto"
-     stroke-width="1.6" />
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+<g class="warning"><rect x="3.829" y="7.450" width="5.343" height="1.100" rx="0.550" transform="rotate(-45.000 6.500 8.000)"/><rect x="6.829" y="7.450" width="5.343" height="1.100" rx="0.550" transform="rotate(45.000 9.500 8.000)"/></g>
+<g><rect x="3.829" y="6.450" width="5.343" height="1.100" rx="0.550" transform="rotate(-45.000 6.500 7.000)"/><rect x="6.829" y="6.450" width="5.343" height="1.100" rx="0.550" transform="rotate(45.000 9.500 7.000)"/></g>
 </svg>
