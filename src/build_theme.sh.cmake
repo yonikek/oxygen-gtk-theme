@@ -14,10 +14,10 @@ create_folders () {
 build_sass() {
   if command -v sassc >/dev/null 2>&1; then
       sassc -I "$3" "$1" "$2"
-  elif sass --version 2>/dev/null | grep -qi dart; then
-      sass --no-source-map -I "$3" "$1" "$2"
-  else
+  elif sass --version 2>&1 | grep -qi ruby; then
       sass -I "$3" --cache-location /tmp/sass-cache "$1" "$2"
+  else
+      sass --no-source-map -I "$3" "$1" "$2"
   fi
 }
 
@@ -55,18 +55,22 @@ render_theme () {
 COLOR_SCHEME=""
 INSTALL_TARGET=""
 THEME_NAME=""
+DARK_SCHEME=""
 COLOR_SCHEME_ROOT="/usr/share/color-schemes"
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
     -h|--help)
       echo "$0: build Oxygen GTK theme"
-      echo "Usage: $0 [-c COLOR_SCHEME] [-r COLOR_SCHEME_ROOT] [-t TARGET_DIRECTORY]"
+      echo "Usage: $0 [-c COLOR_SCHEME] [-d DARK_SCHEME] [-r COLOR_SCHEME_ROOT] [-t TARGET_DIRECTORY]"
       echo
       echo "Arguments:"
       echo "  -h, --help           show this help"
       echo "  -c COLOR_SCHEME      use color scheme with name COLOR_SCHEME. If unset or"
       echo "                       empty, the value from ~/.config/kdeglobals is used"
+      echo "  -d DARK_SCHEME       additionally write gtk-dark.css built from"
+      echo "                       DARK_SCHEME into the theme. If unset or empty,"
+      echo "                       BreezeDark is used"
       echo "  -r COLOR_SCHEME_ROOT The base path of all color schemes or"
       echo "                       /usr/share/color-schemes if unset"
       echo "  -t TARGET_DIRECTORY  the directory to install the color scheme. If unset or"
@@ -77,6 +81,10 @@ while [ "$#" -gt 0 ]; do
     -c)
       shift
       COLOR_SCHEME="$1"
+    ;;
+    -d)
+      shift
+      DARK_SCHEME="$1"
     ;;
     -t)
       shift
@@ -113,3 +121,22 @@ fi
 render_theme "${COLOR_SCHEME}" "${THEME_NAME}" "${INSTALL_TARGET}" "${COLOR_SCHEME_ROOT}/BreezeLight.colors"
 [ -z "${INSTALL_TARGET}" ] && INSTALL_TARGET="${HOME}/.local/share/themes/${THEME_NAME}"
 cp -r assets/ "${INSTALL_TARGET}"
+
+# Optional dark fallback: a full build from the given scheme written as
+# gtk-dark.css into the same theme folder (used when an app requests a dark
+# preference and no Plasma-provided colours are around).
+if [ -n "${DARK_SCHEME}" ]; then
+  DARK_FILE="${COLOR_SCHEME_ROOT}/${DARK_SCHEME}.colors"
+  if ! [ -f "${DARK_FILE}" ]; then
+    DARK_FILE="${HOME}/.local/share/color-schemes/${DARK_SCHEME}.colors"
+  fi
+  if ! [ -f "${DARK_FILE}" ]; then
+    echo "colorscheme ${DARK_SCHEME} not found"
+    exit 1
+  fi
+  DARK_STAGING="$(mktemp -d)"
+  render_theme "${DARK_FILE}" "${THEME_NAME}" "${DARK_STAGING}" "${COLOR_SCHEME_ROOT}/BreezeLight.colors"
+  cp "${DARK_STAGING}/gtk-3.0/gtk.css" "${INSTALL_TARGET}/gtk-3.0/gtk-dark.css"
+  cp "${DARK_STAGING}/gtk-4.0/gtk.css" "${INSTALL_TARGET}/gtk-4.0/gtk-dark.css"
+  rm -rf "${DARK_STAGING}"
+fi
