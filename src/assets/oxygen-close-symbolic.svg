@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-<g class="warning"><rect x="3.914" y="7.950" width="8.171" height="1.100" rx="0.550" transform="rotate(45.000 8.000 8.500)"/><rect x="3.914" y="7.950" width="8.171" height="1.100" rx="0.550" transform="rotate(135.000 8.000 8.500)"/></g>
-<g><rect x="3.914" y="6.950" width="8.171" height="1.100" rx="0.550" transform="rotate(45.000 8.000 7.500)"/><rect x="3.914" y="6.950" width="8.171" height="1.100" rx="0.550" transform="rotate(135.000 8.000 7.500)"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
+<rect x="5.657" y="11.400" width="9.685" height="1.200" rx="0.600" class="warning" transform="rotate(45.000 10.500 12.000)"/><rect x="5.657" y="11.400" width="9.685" height="1.200" rx="0.600" class="warning" transform="rotate(135.000 10.500 12.000)"/>
+<rect x="5.657" y="9.900" width="9.685" height="1.200" rx="0.600" transform="rotate(45.000 10.500 10.500)"/><rect x="5.657" y="9.900" width="9.685" height="1.200" rx="0.600" transform="rotate(135.000 10.500 10.500)"/>
 </svg>

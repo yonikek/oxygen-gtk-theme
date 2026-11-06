@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">
-<g class="warning"><circle cx="7" cy="7.65" r="2.6"/></g>
-<g><circle cx="7" cy="6.35" r="2.6"/></g>
+<circle cx="7.000" cy="7.650" r="2.600" class="warning"/>
+<circle cx="7.000" cy="6.350" r="2.600"/>
 </svg>

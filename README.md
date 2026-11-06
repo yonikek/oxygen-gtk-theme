@@ -20,12 +20,19 @@ kept; the visual layer follows Oxygen.
 * Lit gradients, dark outlines with a light inner bevel, inset fields and
   coloured hover/focus glows on buttons, entries, tabs, toolbars, titlebars,
   tooltips, selections, scrollbars, sliders, switches and progress bars.
-* **Window controls** drawn like Oxygen's title bar buttons: a ring
-  (dark above, light below, 18px and drawn as a background image so it is
-  never stretched, even where the toolkit stretches the button) around a minimise `v`, maximise `^`, restore
-  diamond and close `x` glyph with Oxygen's light emboss copy underneath. The
-  glyph takes the scheme's hover colour on hover, and its negative (red) colour
-  for close. In an inactive window the whole control fades out. Geometry is taken from `renderTitleBarIcon()` in the Oxygen style.
+* **Window controls** built like the buttons of the Oxygen window decoration
+  (`DecoHelper::windecoButton`, `Button::paint`): a 21px button with a glossy
+  disc (light top to dark bottom), a light-to-mid outline, a soft shadow, and on
+  hover a halo plus glyph in the scheme's hover colour (its negative/red colour
+  for close). The glyphs (minimise `v`, maximise `^`, restore diamond, close
+  `x`) use the decoration's own 21 unit geometry with its light emboss copy.
+  Everything is a fixed-size background image, so the controls keep their shape
+  even where GTK4 stretches the buttons, and in an inactive window they fade out.
+* **Title bar and window background** follow Oxygen's window background: a
+  vertical gradient (light at the top, the window colour at 150px, darker at
+  300px) with a soft radial glow at the top centre, anchored to the top of the
+  window so the header bar and the window body are one continuous surface. The
+  caption has Oxygen's light contrast copy below it.
 * **Icons**: the check mark, radio dot and every arrow (combo boxes, spin
   buttons, tabs, menus, expanders, tree views, header bars) are bundled
   Oxygen-style glyphs, taken from the style's own check, radio and arrow

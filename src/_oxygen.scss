@@ -24,12 +24,29 @@
 	);
 }
 
-// titlebar: KDE4 Oxygen blends the WM colour shine into the window colour
-@function oxy-titlebar($c, $bg) {
+// Oxygen window background (liboxygen Helper::renderWindowBackground).
+// A vertical gradient light top -> window colour at 150px -> darker bottom at
+// 300px, with a soft radial glow at the top centre (600px wide, 64px high,
+// fading 1 / 0.4 / 0.145 / 0). Both are anchored to the top of the window, so
+// the title bar and the window body are slices of one continuous background.
+// KDE derives the three colours with KColorScheme::shade() in HCY space; GTK
+// only has HSL shade() and mix(), so these are close approximations that also
+// behave for dark colours.
+@function oxy-win-top($c) {
+	@return unquote("mix(shade(#{$c}, 1.06), white, 0.94)");
+}
+@function oxy-win-bottom($c) {
+	@return unquote("shade(#{$c}, 0.93)");
+}
+@function oxy-win-glow($c) {
+	@return unquote("mix(shade(#{$c}, 1.3), white, 0.8)");
+}
+@function oxy-window-background($c) {
+	$glow: oxy-win-glow($c);
 	@return unquote(
-		"linear-gradient(to bottom," +
-			" shade(#{$c}, 1.12) 0px, #{$c} 20px," +
-			" mix(#{$c}, #{$bg}, 0.55) 42px, #{$bg} 100%)"
+		"radial-gradient(ellipse 300px 64px at 50% 0px, alpha(#{$glow}, 1) 0%, alpha(#{$glow}, 0.4) 50%," +
+		" alpha(#{$glow}, 0.145) 75%, alpha(#{$glow}, 0) 100%)," +
+		" linear-gradient(to bottom, #{oxy-win-top($c)} 0px, #{$c} 150px, #{oxy-win-bottom($c)} 300px)"
 	);
 }
 
@@ -120,47 +137,59 @@
 	);
 }
 
-// Window controls, after Oxygen's title bar buttons (StyleHelper::
-// dockWidgetButton and Style::renderTitleBarButton): a ring that is dark at
-// the top and light at the bottom, and a glyph with a light emboss copy below
-// it. Both are background images with a fixed 18px size, so they keep their
-// proportions even when the toolkit stretches the button (GTK4 does).
-// Ring colours are opaque mixes with the titlebar colour: $f is how much of
-// the pure ring colour is kept (lower = fainter, used for inactive windows).
-@function oxy-wc-ring-dark($bg, $f: 0.6) {
-	@return unquote("mix(shade(#{$bg}, 0.5), #{$bg}, #{$f})");
+// Window controls, after Oxygen's decoration buttons (kdecoration:
+// Button::paint, DecoHelper::windecoButton). A 21px button holds a glossy
+// disc (light top -> dark bottom) with a light-to-mid outline, a soft shadow
+// below it, and on hover a halo in the hover colour (negative colour for
+// close). The glyph is drawn 1.5px above its light contrast copy.
+// Everything is a fixed-size background image, so the control keeps its shape
+// even where the toolkit stretches the button (GTK4 does).
+// Light / dark are Oxygen's calcLightColor / calcDarkColor of the titlebar.
+@function oxy-wc-light($c) {
+	@return oxy-bevel($c, 1.35);
 }
-@function oxy-wc-ring-light($bg, $f: 0.7) {
-	@return unquote("mix(shade(#{$bg}, 1.6), #{$bg}, #{$f})");
+@function oxy-wc-dark($c) {
+	@return oxy-outline($c, 0.7);
+}
+@function oxy-wc-mid($c) {
+	@return unquote("mix(#{oxy-wc-light($c)}, #{oxy-wc-dark($c)}, 0.5)");
+}
+@function oxy-wc-shadow($c) {
+	@return oxy-outline($c, 0.35);
 }
 
 // $glyph: close | minimize | maximize | maximized
-// $hover: the glyph colour on hover (Oxygen: scheme hover colour, red for close)
+// $hover: the glyph / halo colour on hover (Oxygen: scheme hover colour, red for close)
 @mixin oxy-titlebutton($glyph, $hover: gtk("@theme_button_decoration_hover")) {
 	$tb_bg: gtk("@theme_titlebar_background");
+	$tb_light: oxy-wc-light($tb_bg);
+	$tb_dark: oxy-wc-dark($tb_bg);
 	$tb_glyph: -gtk-recolor(
 		url("../assets/oxygen-#{$glyph}-symbolic.svg"),
-		warning oxy-bevel($tb_bg, 1.6)
+		warning $tb_light
 	);
 	$tb_ring: -gtk-recolor(
 		url("../assets/oxygen-wc-ring-symbolic.svg"),
-		success oxy-wc-ring-dark($tb_bg, 0.6),
-		warning oxy-wc-ring-light($tb_bg, 0.7)
+		error oxy-wc-mid($tb_bg),
+		warning $tb_light
 	);
-	$tb_ring_pressed: -gtk-recolor(
-		url("../assets/oxygen-wc-ring-symbolic.svg"),
-		success oxy-wc-ring-dark($tb_bg, 0.9),
-		warning oxy-wc-ring-light($tb_bg, 0.7)
+	$tb_slab: -gtk-recolor(
+		url("../assets/oxygen-wc-slab-symbolic.svg"),
+		error oxy-wc-shadow($tb_bg),
+		success $tb_dark,
+		warning $tb_light
 	);
-	$tb_ring_inactive: -gtk-recolor(
-		url("../assets/oxygen-wc-ring-symbolic.svg"),
-		success oxy-wc-ring-dark($tb_bg, 0.3),
-		warning oxy-wc-ring-light($tb_bg, 0.35)
+	$tb_slab_pressed: -gtk-recolor(
+		url("../assets/oxygen-wc-slab-symbolic.svg"),
+		error oxy-wc-shadow($tb_bg),
+		success $tb_light,
+		warning $tb_dark
 	);
+	$tb_glow: -gtk-recolor(url("../assets/oxygen-wc-glow-symbolic.svg"));
 
-	min-width: 18px;
-	min-height: 18px;
-	margin: 0 2px;
+	min-width: 21px;
+	min-height: 21px;
+	margin: 0 1px;
 	padding: 0;
 	border: none;
 	border-image: none;
@@ -172,10 +201,10 @@
 	opacity: 1;
 	color: gtk("@theme_titlebar_foreground");
 	background-color: transparent;
-	background-image: $tb_glyph, $tb_ring;
-	background-position: center, center;
-	background-repeat: no-repeat, no-repeat;
-	background-size: 18px 18px, 18px 18px;
+	background-image: $tb_glyph, $tb_ring, $tb_slab;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 21px 21px;
 
 	// hide the stock icon, the glyph is drawn as the background
 	image {
@@ -186,7 +215,7 @@
 	&:hover:not(:checked):not(:active) {
 		color: $hover;
 		background-color: transparent;
-		background-image: $tb_glyph, $tb_ring;
+		background-image: $tb_glyph, $tb_ring, $tb_slab, $tb_glow;
 		box-shadow: none;
 	}
 
@@ -194,13 +223,13 @@
 	&:active:hover {
 		color: $hover;
 		background-color: transparent;
-		background-image: $tb_glyph, $tb_ring_pressed;
+		background-image: $tb_glyph, $tb_ring, $tb_slab_pressed, $tb_glow;
 		box-shadow: none;
 	}
 
 	&:focus,
 	&:focus:not(:checked):not(:active) {
-		background-image: $tb_glyph, $tb_ring;
+		background-image: $tb_glyph, $tb_ring, $tb_slab;
 		box-shadow: none;
 	}
 
@@ -210,7 +239,7 @@
 	&:backdrop:focus {
 		color: gtk("@theme_titlebar_foreground_backdrop");
 		background-color: transparent;
-		background-image: $tb_glyph, $tb_ring_inactive;
+		background-image: $tb_glyph, $tb_ring, $tb_slab;
 		box-shadow: none;
 		opacity: 0.55;
 	}

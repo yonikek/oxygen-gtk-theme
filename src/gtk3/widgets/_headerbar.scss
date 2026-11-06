@@ -13,16 +13,12 @@ headerbar {
 	border-color: gtk("@borders");
 	color: gtk("@theme_titlebar_foreground");
 	background-color: gtk("@theme_titlebar_background");
-	background-image: oxy-titlebar(
-				gtk("@theme_titlebar_background"),
-				gtk("@theme_bg_color")
-			);
+	background-image: oxy-window-background(gtk("@theme_titlebar_background"));
 	border-top: 1px solid lighter(gtk("@theme_titlebar_background"));
 
 	&:backdrop {
-		background-image: oxy-titlebar(
-			gtk("@theme_titlebar_background_backdrop"),
-			gtk("@theme_unfocused_bg_color")
+		background-image: oxy-window-background(
+			gtk("@theme_titlebar_background_backdrop")
 		);
 		background-color: gtk(
 			"@theme_titlebar_background_backdrop"
@@ -33,7 +29,9 @@ headerbar {
 	}
 	label {
 		font-weight: normal;
+		text-shadow: 0 1px 0 alpha(shade(gtk("@theme_titlebar_background"), 1.35), 0.8);
 		&:backdrop {
+			text-shadow: 0 1px 0 alpha(shade(gtk("@theme_titlebar_background_backdrop"), 1.35), 0.8);
 			color: gtk("@theme_titlebar_foreground_backdrop");
 		}
 	}

@@ -278,16 +278,16 @@ label {
 	}
 }
 
-// Oxygen paints a soft light gradient over the top of every window
+// Oxygen paints one continuous gradient and radial glow over the top of the
+// window; the header bar uses the same function, so they join seamlessly.
 $_oxy_win_bg: gtk("@theme_bg_color");
-window.background,
+$_oxy_win_bg_backdrop: gtk("@theme_unfocused_bg_color");
+window.background:not(.popup),
 dialog.background,
 messagedialog.background {
-	background-image: unquote(
-		"linear-gradient(to bottom, #{oxy-bevel($_oxy_win_bg, 1.08)} 0px, #{$_oxy_win_bg} 280px)"
-	);
+	background-image: oxy-window-background($_oxy_win_bg);
 
 	&:backdrop {
-		background-image: none;
+		background-image: oxy-window-background($_oxy_win_bg_backdrop);
 	}
 }
