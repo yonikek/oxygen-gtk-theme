@@ -121,27 +121,41 @@
 }
 
 // Window controls, after Oxygen's title bar buttons (StyleHelper::
-// dockWidgetButton and Style::renderTitleBarButton): a sunken ring that is
-// dark at the top and light at the bottom, and a glyph with a light emboss
-// copy below it.
-@function oxy-wc-ring($bg, $a: 0.6) {
-	@return unquote(
-		"inset 0 0 0 1px alpha(shade(#{$bg}, 0.5), #{$a}), 0 1px 0 alpha(shade(#{$bg}, 1.6), 0.8)"
-	);
+// dockWidgetButton and Style::renderTitleBarButton): a ring that is dark at
+// the top and light at the bottom, and a glyph with a light emboss copy below
+// it. Both are background images with a fixed 18px size, so they keep their
+// proportions even when the toolkit stretches the button (GTK4 does).
+// Ring colours are opaque mixes with the titlebar colour: $f is how much of
+// the pure ring colour is kept (lower = fainter, used for inactive windows).
+@function oxy-wc-ring-dark($bg, $f: 0.6) {
+	@return unquote("mix(shade(#{$bg}, 0.5), #{$bg}, #{$f})");
 }
-@function oxy-wc-ring-pressed($bg) {
-	@return unquote(
-		"inset 0 1px 3px alpha(shade(#{$bg}, 0.3), 0.6), inset 0 0 0 1px alpha(shade(#{$bg}, 0.5), 0.7), 0 1px 0 alpha(shade(#{$bg}, 1.6), 0.8)"
-	);
+@function oxy-wc-ring-light($bg, $f: 0.7) {
+	@return unquote("mix(shade(#{$bg}, 1.6), #{$bg}, #{$f})");
 }
 
 // $glyph: close | minimize | maximize | maximized
 // $hover: the glyph colour on hover (Oxygen: scheme hover colour, red for close)
 @mixin oxy-titlebutton($glyph, $hover: gtk("@theme_button_decoration_hover")) {
 	$tb_bg: gtk("@theme_titlebar_background");
-	$tb_img: -gtk-recolor(
+	$tb_glyph: -gtk-recolor(
 		url("../assets/oxygen-#{$glyph}-symbolic.svg"),
 		warning oxy-bevel($tb_bg, 1.6)
+	);
+	$tb_ring: -gtk-recolor(
+		url("../assets/oxygen-wc-ring-symbolic.svg"),
+		success oxy-wc-ring-dark($tb_bg, 0.6),
+		warning oxy-wc-ring-light($tb_bg, 0.7)
+	);
+	$tb_ring_pressed: -gtk-recolor(
+		url("../assets/oxygen-wc-ring-symbolic.svg"),
+		success oxy-wc-ring-dark($tb_bg, 0.9),
+		warning oxy-wc-ring-light($tb_bg, 0.7)
+	);
+	$tb_ring_inactive: -gtk-recolor(
+		url("../assets/oxygen-wc-ring-symbolic.svg"),
+		success oxy-wc-ring-dark($tb_bg, 0.3),
+		warning oxy-wc-ring-light($tb_bg, 0.35)
 	);
 
 	min-width: 18px;
@@ -149,18 +163,19 @@
 	margin: 0 2px;
 	padding: 0;
 	border: none;
-	border-radius: 50%;
 	border-image: none;
+	border-radius: 0;
 	-gtk-icon-source: none;
 	text-shadow: none;
 	-gtk-icon-shadow: none;
+	box-shadow: none;
+	opacity: 1;
 	color: gtk("@theme_titlebar_foreground");
 	background-color: transparent;
-	background-image: $tb_img;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: 18px 18px;
-	box-shadow: oxy-wc-ring($tb_bg);
+	background-image: $tb_glyph, $tb_ring;
+	background-position: center, center;
+	background-repeat: no-repeat, no-repeat;
+	background-size: 18px 18px, 18px 18px;
 
 	// hide the stock icon, the glyph is drawn as the background
 	image {
@@ -171,29 +186,32 @@
 	&:hover:not(:checked):not(:active) {
 		color: $hover;
 		background-color: transparent;
-		background-image: $tb_img;
-		box-shadow: oxy-wc-ring($tb_bg);
+		background-image: $tb_glyph, $tb_ring;
+		box-shadow: none;
 	}
 
 	&:active,
 	&:active:hover {
 		color: $hover;
 		background-color: transparent;
-		background-image: $tb_img;
-		box-shadow: oxy-wc-ring-pressed($tb_bg);
+		background-image: $tb_glyph, $tb_ring_pressed;
+		box-shadow: none;
 	}
 
 	&:focus,
 	&:focus:not(:checked):not(:active) {
-		background-image: $tb_img;
-		box-shadow: oxy-wc-ring($tb_bg);
+		background-image: $tb_glyph, $tb_ring;
+		box-shadow: none;
 	}
 
+	// inactive window: the whole control fades out
 	&:backdrop,
-	&:backdrop:hover {
+	&:backdrop:hover,
+	&:backdrop:focus {
 		color: gtk("@theme_titlebar_foreground_backdrop");
 		background-color: transparent;
-		background-image: $tb_img;
-		box-shadow: oxy-wc-ring($tb_bg, 0.35);
+		background-image: $tb_glyph, $tb_ring_inactive;
+		box-shadow: none;
+		opacity: 0.55;
 	}
 }

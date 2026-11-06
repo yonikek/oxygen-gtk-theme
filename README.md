@@ -20,11 +20,12 @@ kept; the visual layer follows Oxygen.
 * Lit gradients, dark outlines with a light inner bevel, inset fields and
   coloured hover/focus glows on buttons, entries, tabs, toolbars, titlebars,
   tooltips, selections, scrollbars, sliders, switches and progress bars.
-* **Window controls** drawn like Oxygen's title bar buttons: a sunken ring
-  (dark above, light below) around a minimise `v`, maximise `^`, restore
+* **Window controls** drawn like Oxygen's title bar buttons: a ring
+  (dark above, light below, 18px and drawn as a background image so it is
+  never stretched, even where the toolkit stretches the button) around a minimise `v`, maximise `^`, restore
   diamond and close `x` glyph with Oxygen's light emboss copy underneath. The
   glyph takes the scheme's hover colour on hover, and its negative (red) colour
-  for close. Geometry is taken from `renderTitleBarIcon()` in the Oxygen style.
+  for close. In an inactive window the whole control fades out. Geometry is taken from `renderTitleBarIcon()` in the Oxygen style.
 * **Icons**: the check mark, radio dot and every arrow (combo boxes, spin
   buttons, tabs, menus, expanders, tree views, header bars) are bundled
   Oxygen-style glyphs, taken from the style's own check, radio and arrow

@@ -88,6 +88,36 @@ glyphs["bullet-symbolic.svg"] = svg(
     '<g class="warning"><circle cx="7" cy="7.65" r="2.6"/></g>\n'
     '<g><circle cx="7" cy="6.35" r="2.6"/></g>\n')
 
+# --- window control ring (StyleHelper::dockWidgetButton) --------------------
+# Oxygen strokes a circle (diameter 12.33 on an 18 grid, pen 1.2) with a
+# gradient that is dark at the top and light at the bottom. Recolouring only
+# fills flat colours, so the gradient is approximated by a dark ring (class
+# "success") over the lower half of a light ring (class "warning") that sits
+# slightly lower. The stylesheet picks both colours from the titlebar colour.
+CX, CY, R_OUT, R_IN = 9.0, 8.27, 6.165, 4.965
+
+
+def annulus(cx, cy, ro, ri):
+    return ('<path fill-rule="evenodd" d="M %.3f %.3f A %.3f %.3f 0 1 0 %.3f %.3f '
+            'A %.3f %.3f 0 1 0 %.3f %.3f Z M %.3f %.3f A %.3f %.3f 0 1 1 %.3f %.3f '
+            'A %.3f %.3f 0 1 1 %.3f %.3f Z"/>'
+            % (cx - ro, cy, ro, ro, cx + ro, cy, ro, ro, cx - ro, cy,
+               cx - ri, cy, ri, ri, cx + ri, cy, ri, ri, cx - ri, cy))
+
+
+def lower_half_annulus(cx, cy, ro, ri):
+    return ('<path d="M %.3f %.3f A %.3f %.3f 0 0 0 %.3f %.3f L %.3f %.3f '
+            'A %.3f %.3f 0 0 1 %.3f %.3f Z"/>'
+            % (cx - ro, cy, ro, ro, cx + ro, cy, cx + ri, cy,
+               ri, ri, cx - ri, cy))
+
+
+glyphs["oxygen-wc-ring-symbolic.svg"] = svg(
+    18,
+    '<g class="warning">%s</g>\n<g class="success">%s</g>\n'
+    % (lower_half_annulus(CX, CY + 0.9, R_OUT, R_IN),
+       annulus(CX, CY - 0.1, R_OUT, R_IN)))
+
 for fname, content in glyphs.items():
     with open(os.path.join(OUT, fname), "w") as fh:
         fh.write(content)
