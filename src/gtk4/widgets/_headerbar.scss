@@ -29,9 +29,9 @@ headerbar {
 	}
 	label {
 		font-weight: normal;
-		text-shadow: 0 1px 0 alpha(shade(gtk("@theme_titlebar_background"), 1.35), 0.8);
+		text-shadow: 0 1px 0 gtkalpha(oxy-bevel(gtk("@theme_titlebar_background"), 1.35), 0.8);
 		&:backdrop {
-			text-shadow: 0 1px 0 alpha(shade(gtk("@theme_titlebar_background_backdrop"), 1.35), 0.8);
+			text-shadow: 0 1px 0 gtkalpha(oxy-bevel(gtk("@theme_titlebar_background_backdrop"), 1.35), 0.8);
 			color: gtk("@theme_titlebar_foreground_backdrop");
 		}
 	}
