@@ -14,10 +14,13 @@ menubar,
 	padding: 0px;
 	box-shadow: none;
 	border-style: none;
-	background-color: gtk("@theme_header_background");
+	background-color: gtk("@theme_bg_color");
+	background-image: oxy-gradient(gtk("@theme_bg_color"), 1.06, 0.98);
+	border-bottom: 1px solid gtk("@borders");
 
 	&:backdrop {
-		background-color: gtk("@theme_header_background_backdrop");
+		background-color: gtk("@theme_unfocused_bg_color");
+		background-image: none;
 	}
 
 	> item {

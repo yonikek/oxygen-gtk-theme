@@ -137,7 +137,7 @@
 			border-color: gtk("@theme_button_decoration_hover");
 
 			&:not(:checked):not(:active) {
-				background-image: oxy-gradient($obg, 1.2, 1);
+				background-image: oxy-gloss($obg);
 				box-shadow: oxy-raised-glow(
 					$obg,
 					gtk("@theme_button_decoration_hover")
@@ -199,7 +199,7 @@
 			border-color: gtk("@theme_button_decoration_hover");
 
 			&:not(:checked):not(:active) {
-				background-image: oxy-gradient($tbg, 1.15, 0.97);
+				background-image: oxy-gloss($tbg);
 				box-shadow: oxy-raised-flat-glow(
 					$tbg,
 					gtk("@theme_button_decoration_hover"),

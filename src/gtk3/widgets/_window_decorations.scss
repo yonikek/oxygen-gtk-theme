@@ -10,8 +10,11 @@ decoration {
 	//border: 1px solid transparent;
 	border-radius: $window-border-radius $window-border-radius 0 0;
 	border-width: 0px;
-	box-shadow: 0px 0px 16px $shadow,
-		0px 2px 8px scale-color($shadow, $alpha: -40%);
+	box-shadow: oxy-frame-ring(gtk("@theme_bg_color"));
+
+	&:backdrop {
+		box-shadow: oxy-frame-ring-backdrop(gtk("@theme_bg_color"));
+	}
 
 	/* this is used for the resize cursor area */
 	margin: 10px;

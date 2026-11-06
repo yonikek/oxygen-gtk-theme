@@ -70,7 +70,7 @@ switch {
 		box-shadow: oxy-raised(gtk("@theme_button_background_normal"));
 		border-color: oxy-outline(gtk("@theme_button_background_normal"));
 		background-color: gtk("@theme_button_background_normal");
-		background-image: oxy-gradient(gtk("@theme_button_background_normal"), 1.12, 0.94);
+		background-image: oxy-gloss(gtk("@theme_button_background_normal"));
 	}
 
 	&:hover slider {

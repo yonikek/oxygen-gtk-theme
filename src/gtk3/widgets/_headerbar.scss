@@ -13,11 +13,17 @@ headerbar {
 	border-color: gtk("@borders");
 	color: gtk("@theme_titlebar_foreground");
 	background-color: gtk("@theme_titlebar_background");
-	background-image: oxy-gradient(gtk("@theme_titlebar_background"), 1.1, 0.96);
+	background-image: oxy-titlebar(
+				gtk("@theme_titlebar_background"),
+				gtk("@theme_bg_color")
+			);
 	border-top: 1px solid lighter(gtk("@theme_titlebar_background"));
 
 	&:backdrop {
-		background-image: none;
+		background-image: oxy-titlebar(
+			gtk("@theme_titlebar_background_backdrop"),
+			gtk("@theme_unfocused_bg_color")
+		);
 		background-color: gtk(
 			"@theme_titlebar_background_backdrop"
 		);

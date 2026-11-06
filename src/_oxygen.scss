@@ -4,13 +4,32 @@
 // -------------------
 // Oxygen's character comes from lit gradients, a dark 1px outline, a light
 // inner bevel and soft glows in the scheme's hover/focus colours. Everything
-// below is expressed with GTK colour functions on the exported named colours,
-// so the theme keeps following the KDE colour scheme it was generated from.
+// below is expressed in terms of the exported named colours with runtime CSS
+// colour functions, so the theme keeps following the colour scheme it was
+// generated from (and the one applied live by kde-gtk-config / colors.css).
 
 // vertical gradient built from one colour: $top/$bottom are shade() factors
-@function oxy-gradient($c, $top: 1.1, $bottom: 0.95) {
+@function oxy-gradient($c, $top: 1.08, $bottom: 0.95) {
 	@return unquote(
 		"linear-gradient(to bottom, shade(#{$c}, #{$top}), shade(#{$c}, #{$bottom}))"
+	);
+}
+
+// Oxygen's signature glossy gradient: bright glass top half, gentle falloff.
+@function oxy-gloss($c) {
+	@return unquote(
+		"linear-gradient(to bottom," +
+			" shade(#{$c}, 1.45) 0px, shade(#{$c}, 1.1) 35%," +
+			" #{$c} 52%, shade(#{$c}, 0.92) 100%)"
+	);
+}
+
+// titlebar: KDE4 Oxygen blends the WM colour shine into the window colour
+@function oxy-titlebar($c, $bg) {
+	@return unquote(
+		"linear-gradient(to bottom," +
+			" shade(#{$c}, 1.12) 0px, #{$c} 20px," +
+			" mix(#{$c}, #{$bg}, 0.55) 42px, #{$bg} 100%)"
 	);
 }
 
@@ -27,7 +46,7 @@
 // raised surface shadow: inner top highlight + soft drop shadow
 @function oxy-raised($c) {
 	@return unquote(
-		"inset 0 1px 0 #{oxy-bevel($c)}, 0 1px 2px rgba(0, 0, 0, 0.18)"
+		"inset 0 1px 0 shade(#{$c}, 1.45), 0 1px 2px alpha(shade(#{$c}, 0.35), 0.35)"
 	);
 }
 
@@ -36,21 +55,27 @@
 	@return unquote("inset 0 1px 0 #{oxy-bevel($c)}");
 }
 
-// pressed / sunken surface
-@function oxy-sunken() {
+// pressed / sunken inner shadow. Call with no arguments for a neutral
+// black inner shadow, or pass $c to derive the shadow from a base colour.
+@function oxy-sunken($c: null, $a: 0.3) {
+	@if $c == null {
+		@return unquote(
+			"inset 0 1px 3px rgba(0, 0, 0, #{$a}), inset 0 0 0 1px rgba(0, 0, 0, 0.08)"
+		);
+	}
 	@return unquote(
-		"inset 0 1px 3px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(0, 0, 0, 0.06)"
+		"inset 0 1px 2px alpha(shade(#{$c}, 0.3), #{$a + 0.1}), inset 0 0 0 1px alpha(shade(#{$c}, 0.6), 0.4)"
 	);
 }
 
-// coloured glow used for hover and focus
+// coloured glow ring used for hover and focus
 @function oxy-glow($c, $a: 0.4) {
-	@return unquote("0 0 0 1px #{gtkalpha($c, $a)}");
+	@return unquote("0 0 0 1px #{$c}");
 }
 
 // inset field shadow used for entries and troughs
-@function oxy-field() {
-	@return unquote("inset 0 1px 2px rgba(0, 0, 0, 0.18)");
+@function oxy-field($a: 0.16) {
+	@return unquote("inset 0 1px 2px rgba(0, 0, 0, #{$a})");
 }
 
 // raised surface with a coloured glow ring (hover / focus)
@@ -71,9 +96,23 @@
 	);
 }
 
-// inactive notebook tab: translucent foreground tint, darker towards the bottom
-@function oxy-tab-gradient($fg) {
+// inactive notebook tab: a slightly sunken surface, darker towards the bottom
+@function oxy-tab-gradient($bg, $top: 0.965, $bottom: 0.945) {
 	@return unquote(
-		"linear-gradient(to bottom, #{gtkalpha($fg, 0.12)}, #{gtkalpha($fg, 0.26)})"
+		"linear-gradient(to bottom, shade(#{$bg}, #{$top}), shade(#{$bg}, #{$bottom}))"
+	);
+}
+
+// window frame: dark hairline ring drawn by the decoration node
+@function oxy-frame-ring($c) {
+	@return unquote(
+		"0 0 0 1px alpha(shade(#{$c}, 0.45), 0.9), 0 0 0 2px alpha(shade(#{$c}, 0.75), 0.5), 0 2px 12px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.25)"
+	);
+}
+
+// lighter window frame ring for backdrop windows
+@function oxy-frame-ring-backdrop($c) {
+	@return unquote(
+		"0 0 0 1px alpha(shade(#{$c}, 0.55), 0.7), 0 1px 8px rgba(0, 0, 0, 0.18)"
 	);
 }

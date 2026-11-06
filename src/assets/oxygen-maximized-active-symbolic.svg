@@ -8,9 +8,10 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <path
-     id="path1057"
-     d="M 18,0 A 18,18 0 0 0 0,18 18,18 0 0 0 18,36 18,18 0 0 0 36,18 18,18 0 0 0 18,0 Z M 18,7.5858 28.414,17.9998 18,28.4136 7.586,17.9998 Z m 0,2.828 -7.5858,7.5858 7.5858,7.5858 7.5858,-7.5858 z"
-     fill="#ffffff"
-     opacity="0.3"
-     stroke-width="1.59099" />
+     id="glyph"
+     d="M 18,0 A 18,18 0 0 0 0,18 18,18 0 0 0 18,36 18,18 0 0 0 36,18 18,18 0 0 0 18,0 Z M 11,11 H 25 V 25 H 11 Z M 15.8,15.8 H 20.2 V 20.2 H 15.8 Z"
+     color="#000000"
+     fill="#fefefe"
+     image-rendering="auto"
+     stroke-width="1.6" />
 </svg>

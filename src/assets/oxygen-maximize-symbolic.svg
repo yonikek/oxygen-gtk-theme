@@ -8,14 +8,10 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <path
-     id="path1093"
-     d="M 17.9999,10.586 7.293,21.293 8.707,22.707 18,13.414 l 9.293,9.293 1.414,-1.414 z"
+     id="glyph"
+     d="M 11,11 H 25 V 25 H 11 Z M 13.6,13.6 V 22.4 H 22.4 V 13.6 Z"
      color="#000000"
-     color-rendering="auto"
-     dominant-baseline="auto"
-     fill="#ffffff"
+     fill="#fefefe"
      image-rendering="auto"
-     shape-rendering="auto"
-     solid-color="#000000"
-     stroke-width="1.58302" />
+     stroke-width="1.6" />
 </svg>
