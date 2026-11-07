@@ -255,17 +255,3 @@ label {
 picture:disabled {
 	opacity: 0.5;
 }
-
-// Oxygen paints one continuous gradient and radial glow over the top of the
-// window; the header bar uses the same function, so they join seamlessly.
-$_oxy_win_bg: gtk("@theme_bg_color");
-$_oxy_win_bg_backdrop: gtk("@theme_unfocused_bg_color");
-window.background:not(.popup),
-dialog.background,
-messagedialog.background {
-	background-image: oxy-window-background($_oxy_win_bg);
-
-	&:backdrop {
-		background-image: oxy-window-background($_oxy_win_bg_backdrop);
-	}
-}

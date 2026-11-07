@@ -26,13 +26,15 @@ kept; the visual layer follows Oxygen.
   hover a halo plus glyph in the scheme's hover colour (its negative/red colour
   for close). The glyphs (minimise `v`, maximise `^`, restore diamond, close
   `x`) use the decoration's own 21 unit geometry with its light emboss copy.
-  Everything is a fixed-size background image, so the controls keep their shape
-  even where GTK4 stretches the buttons, and in an inactive window they fade out.
-* **Title bar and window background** follow Oxygen's window background: a
-  vertical gradient (light at the top, the window colour at 150px, darker at
-  300px) with a soft radial glow at the top centre, anchored to the top of the
-  window so the header bar and the window body are one continuous surface. The
-  caption has Oxygen's light contrast copy below it.
+  Everything is a fixed-size background image made of opaque shapes (gradients
+  are nine bands of colour, the shadow and halo are mixed with the title bar
+  colour), so the controls keep their shape where GTK4 stretches the buttons and
+  draw the same in any SVG renderer. In an inactive window they fade out.
+* **Header bar**: Oxygen's title bar background, confined to the header bar. It
+  starts at a slightly lighter top colour and relaxes to the window colour at
+  the bottom edge, so it joins the flat window body without a seam, with
+  Oxygen's soft radial sheen at the top centre. The caption has Oxygen's light
+  contrast copy below it.
 * **Icons**: the check mark, radio dot and every arrow (combo boxes, spin
   buttons, tabs, menus, expanders, tree views, header bars) are bundled
   Oxygen-style glyphs, taken from the style's own check, radio and arrow

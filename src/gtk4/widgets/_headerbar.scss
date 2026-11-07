@@ -13,13 +13,15 @@ headerbar {
 	border-color: gtk("@borders");
 	color: gtk("@theme_titlebar_foreground");
 	background-color: gtk("@theme_titlebar_background");
-	background-image: oxy-window-background(gtk("@theme_titlebar_background"));
+	// plain fade first: if a GTK version rejects the radial sheen below, the
+	// invalid declaration is dropped and this one still applies
+	background-image: oxy-titlebar-linear(gtk("@theme_titlebar_background"));
+	background-image: oxy-titlebar-sheen(gtk("@theme_titlebar_background")), oxy-titlebar-linear(gtk("@theme_titlebar_background"));
 	border-top: 1px solid lighter(gtk("@theme_titlebar_background"));
 
 	&:backdrop {
-		background-image: oxy-window-background(
-			gtk("@theme_titlebar_background_backdrop")
-		);
+		background-image: oxy-titlebar-linear(gtk("@theme_titlebar_background_backdrop"));
+		background-image: oxy-titlebar-sheen(gtk("@theme_titlebar_background_backdrop")), oxy-titlebar-linear(gtk("@theme_titlebar_background_backdrop"));
 		background-color: gtk(
 			"@theme_titlebar_background_backdrop"
 		);

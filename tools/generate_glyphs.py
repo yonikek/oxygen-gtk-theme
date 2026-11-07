@@ -13,9 +13,8 @@ that match `rect`, `circle` and `path` directly, so the colour classes
 (warning, success, error) must be on the shapes themselves, not on a wrapping
 <g>. Strokes are converted to filled capsules (rotated rounded rectangles).
 
-Gradients cannot survive recolouring, so they are built from translucent
-overlays instead: a dark base shape, and n light copies of the upper part of it
-with fill-opacity 1/(n-k+1), which composes to an exactly linear gradient.
+Gradients cannot survive recolouring, so they are built from bands of opaque
+colours that the stylesheet chooses (see the oxy-titlebutton mixin).
 """
 import math
 import os
@@ -83,87 +82,110 @@ glyphs["oxygen-maximized-symbolic.svg"] = layered(
     closed=True)
 
 # --- window control button (DecoHelper::windecoButton), 21 unit grid --------
+# Built only from opaque shapes, plain polygons and the four recolour classes:
+# no fill-opacity, no fill-rule and no arc commands, so every SVG renderer GTK
+# may use (librsvg or GTK's own) draws it the same way. Gradients are bands of
+# opaque colours chosen in the stylesheet, which can mix them with the titlebar
+# colour; transparency effects (shadow, glow) are mixed the same way.
 SLAB_C = (10.5, 9.94)       # glossy slab: diameter 12.33 on an 18 grid
 SLAB_R = 7.19
 RING_C = (10.5, 10.34)      # outline circle, pen 0.7 on the same grid
 RING_RO, RING_RI = 7.19, 6.37
+SHADOW_C = (10.5, 11.1)
+GLOW_C = (10.5, 10.3)
+N = 48                      # polygon resolution of a full circle
 
 
-def disc(cx, cy, r, cls=None, opacity=None):
-    return '<circle cx="%.3f" cy="%.3f" r="%.3f"%s/>' % (cx, cy, r, attrs(cls, opacity))
+def f(v):
+    return "%.3f" % v
 
 
-def top_segment(cx, cy, r, y):
-    """Path data for the part of a circle above the horizontal line y."""
+def disc(cx, cy, r, cls=None):
+    return '<circle cx="%s" cy="%s" r="%s"%s/>' % (f(cx), f(cy), f(r), attrs(cls))
+
+
+def poly_path(points, cls=None):
+    d = "M " + " L ".join("%s %s" % (f(x), f(y)) for x, y in points) + " Z"
+    return '<path%s d="%s"/>' % (attrs(cls), d)
+
+
+def multi_path(polys, cls=None):
+    d = " ".join("M " + " L ".join("%s %s" % (f(x), f(y)) for x, y in poly) + " Z"
+                 for poly in polys)
+    return '<path%s d="%s"/>' % (attrs(cls), d)
+
+
+def circle_poly(cx, cy, r):
+    """Counter-clockwise (on screen) polygon of a full circle."""
+    return [(cx + r * math.cos(-2 * math.pi * i / N),
+             cy + r * math.sin(-2 * math.pi * i / N)) for i in range(N)]
+
+
+def top_poly(cx, cy, r, y):
+    """Counter-clockwise polygon of the part of a circle above the line y."""
     d = y - cy
     if d >= r - 1e-6:
-        return None  # whole circle, caller uses a circle element
+        return circle_poly(cx, cy, r)
     if d <= -r + 1e-6:
-        return ""    # empty
-    a = math.sqrt(r * r - d * d)
-    large = 1 if y > cy else 0
-    return "M %.3f %.3f L %.3f %.3f A %.3f %.3f 0 %d 0 %.3f %.3f Z" % (
-        cx - a, y, cx + a, y, r, r, large, cx - a, y)
+        return None
+    alpha = math.asin(d / r)
+    a = r * math.cos(alpha)
+    pts = [(cx - a, y), (cx + a, y)]
+    steps = max(4, int(N * (math.pi + 2 * alpha) / (2 * math.pi)))
+    for i in range(1, steps + 1):
+        phi = alpha - (math.pi + 2 * alpha) * i / steps
+        pts.append((cx + r * math.cos(phi), cy + r * math.sin(phi)))
+    return pts[:-1]  # the last point repeats the chord's left end
 
 
-def overlays(cx, cy, r_out, r_in, n, cls):
-    """n light overlays over the upper part of a disc (r_in=None) or ring."""
-    top, height = cy - r_out, 2 * r_out
-    out = ""
-    for j in range(1, n + 1):
-        y = top + height * (n - j + 1) / n
-        alpha = 1.0 / (n - j + 1)
-        outer = top_segment(cx, cy, r_out, y)
-        if r_in is None:
-            if outer is None:
-                out += disc(cx, cy, r_out, cls, alpha)
-            elif outer:
-                out += '<path%s d="%s"/>' % (attrs(cls, alpha), outer)
-        else:
-            outer_d = outer if outer is not None else (
-                "M %.3f %.3f A %.3f %.3f 0 1 0 %.3f %.3f A %.3f %.3f 0 1 0 %.3f %.3f Z" % (
-                    cx - r_out, cy, r_out, r_out, cx + r_out, cy, r_out, r_out, cx - r_out, cy))
-            inner = top_segment(cx, cy, r_in, y)
-            inner_d = inner if inner is not None else (
-                "M %.3f %.3f A %.3f %.3f 0 1 0 %.3f %.3f A %.3f %.3f 0 1 0 %.3f %.3f Z" % (
-                    cx - r_in, cy, r_in, r_in, cx + r_in, cy, r_in, r_in, cx - r_in, cy))
-            if outer_d:
-                out += '<path fill-rule="evenodd"%s d="%s %s"/>' % (
-                    attrs(cls, alpha), outer_d, inner_d or "")
-    return out
+def disc_shape(cx, cy, r, y, cls):
+    poly = top_poly(cx, cy, r, y)
+    return "" if poly is None else poly_path(poly, cls)
 
 
-# slab file: shadow (error), dark base disc (success), light overlays (warning)
-shadow = "".join(disc(10.5, 11.1, r, "error", a) for r, a in
-                 ((9.4, 0.06), (8.8, 0.08), (8.2, 0.10), (7.6, 0.12)))
-slab = (shadow + disc(*SLAB_C, SLAB_R, "success") +
-        overlays(SLAB_C[0], SLAB_C[1], SLAB_R, None, 8, "warning"))
-glyphs["oxygen-wc-slab-symbolic.svg"] = svg(21, slab + "\n")
-
-# ring file: mid-tone ring (error) under light overlays on its upper part (warning)
-ring_base = ('<path fill-rule="evenodd" class="error" d="'
-             'M %.3f %.3f A %.3f %.3f 0 1 0 %.3f %.3f A %.3f %.3f 0 1 0 %.3f %.3f Z '
-             'M %.3f %.3f A %.3f %.3f 0 1 0 %.3f %.3f A %.3f %.3f 0 1 0 %.3f %.3f Z"/>'
-             % (RING_C[0] - RING_RO, RING_C[1], RING_RO, RING_RO, RING_C[0] + RING_RO, RING_C[1],
-                RING_RO, RING_RO, RING_C[0] - RING_RO, RING_C[1],
-                RING_C[0] - RING_RI, RING_C[1], RING_RI, RING_RI, RING_C[0] + RING_RI, RING_C[1],
-                RING_RI, RING_RI, RING_C[0] - RING_RI, RING_C[1]))
-glyphs["oxygen-wc-ring-symbolic.svg"] = svg(
-    21, ring_base + overlays(RING_C[0], RING_C[1], RING_RO, RING_RI, 6, "warning") + "\n")
+def ring_shape(cx, cy, ro, ri, y, cls):
+    """Annulus (hole wound the opposite way) restricted to the part above y."""
+    outer = top_poly(cx, cy, ro, y)
+    if outer is None:
+        return ""
+    inner = top_poly(cx, cy, ri, y)
+    polys = [outer] + ([inner[::-1]] if inner else [])
+    return multi_path(polys, cls)
 
 
-def annulus(cx, cy, ro, ri, opacity):
-    return ('<path fill-rule="evenodd"%s d="M %.3f %.3f A %.3f %.3f 0 1 0 %.3f %.3f '
-            'A %.3f %.3f 0 1 0 %.3f %.3f Z M %.3f %.3f A %.3f %.3f 0 1 0 %.3f %.3f '
-            'A %.3f %.3f 0 1 0 %.3f %.3f Z"/>'
-            % (attrs(None, opacity), cx - ro, cy, ro, ro, cx + ro, cy, ro, ro, cx - ro, cy,
-               cx - ri, cy, ri, ri, cx + ri, cy, ri, ri, cx - ri, cy))
+def band_ys(cy, r, n):
+    """Chord positions of n horizontal bands of a circle, lowest chord first."""
+    top, height = cy - r, 2 * r
+    return [top + height * (n - k) / n for k in range(1, n)]
 
 
-# glow file (hover): drawOuterGlow, a 3 unit wide halo fading outwards. It has
-# no colour class, so it takes the widget's `color` (hover / negative colour).
-glow = "".join(annulus(10.5, 10.3, ro, ri, a) for ro, ri, a in
-               ((8.2, 7.2, 0.75), (9.2, 8.2, 0.40), (10.2, 9.2, 0.15)))
+# slab: nine bands, bottom to top, three recolour classes per file. File A holds
+# the base disc and the two lowest bands; B and C hold the next three each (a
+# file listed above another is drawn on top of it).
+ys = band_ys(SLAB_C[1], SLAB_R, 9)
+CLS = ("error", "warning", "success")
+slab = [disc_shape(*SLAB_C, SLAB_R, 1e9, "error")]
+slab += [disc_shape(*SLAB_C, SLAB_R, y, CLS[(i + 1) % 3]) for i, y in enumerate(ys)]
+for name, chunk in (("a", slab[0:3]), ("b", slab[3:6]), ("c", slab[6:9])):
+    glyphs["oxygen-wc-slab-%s-symbolic.svg" % name] = svg(21, "".join(chunk) + "\n")
+
+# outline ring: a mid-tone ring whose upper part is lighter, in two steps
+rtop, rh = RING_C[1] - RING_RO, 2 * RING_RO
+ring = (ring_shape(*RING_C, RING_RO, RING_RI, 1e9, "error") +
+        ring_shape(*RING_C, RING_RO, RING_RI, rtop + 0.65 * rh, "warning") +
+        ring_shape(*RING_C, RING_RO, RING_RI, rtop + 0.35 * rh, "success"))
+glyphs["oxygen-wc-ring-symbolic.svg"] = svg(21, ring + "\n")
+
+# soft shadow below the slab: three discs fading outwards (drawn under it)
+shadow = (disc_shape(*SHADOW_C, 9.4, 1e9, "error") +
+          disc_shape(*SHADOW_C, 8.6, 1e9, "warning") +
+          disc_shape(*SHADOW_C, 7.9, 1e9, "success"))
+glyphs["oxygen-wc-shadow-symbolic.svg"] = svg(21, shadow + "\n")
+
+# hover halo (drawOuterGlow): three rings around the slab fading outwards
+glow = (ring_shape(*GLOW_C, 8.2, 7.2, 1e9, "error") +
+        ring_shape(*GLOW_C, 9.2, 8.2, 1e9, "warning") +
+        ring_shape(*GLOW_C, 10.2, 9.2, 1e9, "success"))
 glyphs["oxygen-wc-glow-symbolic.svg"] = svg(21, glow + "\n")
 
 # --- arrows: ArrowNormal, pen 1.6, centred in a 16x16 box -------------------

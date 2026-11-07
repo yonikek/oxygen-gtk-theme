@@ -24,29 +24,29 @@
 	);
 }
 
-// Oxygen window background (liboxygen Helper::renderWindowBackground).
-// A vertical gradient light top -> window colour at 150px -> darker bottom at
-// 300px, with a soft radial glow at the top centre (600px wide, 64px high,
-// fading 1 / 0.4 / 0.145 / 0). Both are anchored to the top of the window, so
-// the title bar and the window body are slices of one continuous background.
-// KDE derives the three colours with KColorScheme::shade() in HCY space; GTK
-// only has HSL shade() and mix(), so these are close approximations that also
+// Header bar, after Oxygen's title bar (liboxygen Helper::renderWindowBackground
+// as used by the window decoration). Oxygen paints a vertical gradient that
+// starts at a slightly lighter "top" colour and relaxes to the window colour,
+// with a soft radial sheen at the top centre (an ellipse 600px wide whose alpha
+// falls 1 / 0.4 / 0.145 / 0). In Oxygen the fade continues down the window
+// body; here it is confined to the header bar: the bar starts at the top colour
+// and reaches the plain window colour exactly at its bottom edge, so it joins
+// the (flat) window body without a seam, and the sheen fades out before the
+// bar ends. KDE derives the top and sheen colours with KColorScheme::shade() in
+// HCY space; GTK has only HSL shade() and mix(), so these are close
+// approximations (+5% lightness on the top, +25% for the sheen) that also
 // behave for dark colours.
-@function oxy-win-top($c) {
-	@return unquote("mix(shade(#{$c}, 1.06), white, 0.94)");
+@function oxy-titlebar-top($c) {
+	@return unquote("shade(#{$c}, 1.05)");
 }
-@function oxy-win-bottom($c) {
-	@return unquote("shade(#{$c}, 0.93)");
+@function oxy-titlebar-linear($c) {
+	@return unquote("linear-gradient(to bottom, #{oxy-titlebar-top($c)}, #{$c})");
 }
-@function oxy-win-glow($c) {
-	@return unquote("mix(shade(#{$c}, 1.3), white, 0.8)");
-}
-@function oxy-window-background($c) {
-	$glow: oxy-win-glow($c);
+@function oxy-titlebar-sheen($c) {
+	$glow: unquote("shade(#{$c}, 1.25)");
 	@return unquote(
-		"radial-gradient(ellipse 300px 64px at 50% 0px, alpha(#{$glow}, 1) 0%, alpha(#{$glow}, 0.4) 50%," +
-		" alpha(#{$glow}, 0.145) 75%, alpha(#{$glow}, 0) 100%)," +
-		" linear-gradient(to bottom, #{oxy-win-top($c)} 0px, #{$c} 150px, #{oxy-win-bottom($c)} 300px)"
+		"radial-gradient(ellipse 300px 40px at 50% 4px, alpha(#{$glow}, 1) 0%, alpha(#{$glow}, 0.4) 50%," +
+		" alpha(#{$glow}, 0.145) 75%, alpha(#{$glow}, 0) 100%)"
 	);
 }
 
@@ -142,28 +142,41 @@
 // disc (light top -> dark bottom) with a light-to-mid outline, a soft shadow
 // below it, and on hover a halo in the hover colour (negative colour for
 // close). The glyph is drawn 1.5px above its light contrast copy.
+//
 // Everything is a fixed-size background image, so the control keeps its shape
-// even where the toolkit stretches the button (GTK4 does).
-// Light / dark are Oxygen's calcLightColor / calcDarkColor of the titlebar.
+// even where the toolkit stretches the button (GTK4 does). The images use only
+// opaque shapes and palette colours (no fill-opacity), so the gradient is nine
+// opaque bands and the shadow / halo are mixed with the titlebar colour here.
+// Light / dark follow Oxygen's calcLightColor / calcDarkColor (white-ish and
+// about 0.82x of a normal light colour).
 @function oxy-wc-light($c) {
 	@return oxy-bevel($c, 1.35);
 }
 @function oxy-wc-dark($c) {
-	@return oxy-outline($c, 0.7);
+	@return oxy-outline($c, 0.82);
 }
 @function oxy-wc-mid($c) {
 	@return unquote("mix(#{oxy-wc-light($c)}, #{oxy-wc-dark($c)}, 0.5)");
 }
-@function oxy-wc-shadow($c) {
-	@return oxy-outline($c, 0.35);
+// band $i (0 = top .. 8 = bottom) of the slab gradient
+$oxy-wc-weights: 1, 0.875, 0.75, 0.625, 0.5, 0.375, 0.25, 0.125, 0;
+@function oxy-wc-band($c, $i) {
+	@return unquote("mix(#{oxy-wc-light($c)}, #{oxy-wc-dark($c)}, #{nth($oxy-wc-weights, $i + 1)})");
+}
+// $a at weight $w over the background colour $bg (opaque stand-in for alpha)
+@function oxy-wc-over($a, $bg, $w) {
+	@return unquote("mix(#{$a}, #{$bg}, #{$w})");
 }
 
 // $glyph: close | minimize | maximize | maximized
 // $hover: the glyph / halo colour on hover (Oxygen: scheme hover colour, red for close)
-@mixin oxy-titlebutton($glyph, $hover: gtk("@theme_button_decoration_hover")) {
+// $margin: GTK4 stretches window buttons to the header bar height, so it
+//          passes vertical margins that leave about 21px
+@mixin oxy-titlebutton($glyph, $hover: gtk("@theme_button_decoration_hover"), $margin: 0 1px) {
 	$tb_bg: gtk("@theme_titlebar_background");
 	$tb_light: oxy-wc-light($tb_bg);
-	$tb_dark: oxy-wc-dark($tb_bg);
+	$tb_shadow: oxy-outline($tb_bg, 0.35);
+
 	$tb_glyph: -gtk-recolor(
 		url("../assets/oxygen-#{$glyph}-symbolic.svg"),
 		warning $tb_light
@@ -171,25 +184,62 @@
 	$tb_ring: -gtk-recolor(
 		url("../assets/oxygen-wc-ring-symbolic.svg"),
 		error oxy-wc-mid($tb_bg),
-		warning $tb_light
+		warning unquote("mix(#{$tb_light}, #{oxy-wc-mid($tb_bg)}, 0.5)"),
+		success $tb_light
 	);
-	$tb_slab: -gtk-recolor(
-		url("../assets/oxygen-wc-slab-symbolic.svg"),
-		error oxy-wc-shadow($tb_bg),
-		success $tb_dark,
-		warning $tb_light
+	$tb_slab_a: -gtk-recolor(
+		url("../assets/oxygen-wc-slab-a-symbolic.svg"),
+		error oxy-wc-band($tb_bg, 8),
+		warning oxy-wc-band($tb_bg, 7),
+		success oxy-wc-band($tb_bg, 6)
 	);
-	$tb_slab_pressed: -gtk-recolor(
-		url("../assets/oxygen-wc-slab-symbolic.svg"),
-		error oxy-wc-shadow($tb_bg),
-		success $tb_light,
-		warning $tb_dark
+	$tb_slab_b: -gtk-recolor(
+		url("../assets/oxygen-wc-slab-b-symbolic.svg"),
+		error oxy-wc-band($tb_bg, 5),
+		warning oxy-wc-band($tb_bg, 4),
+		success oxy-wc-band($tb_bg, 3)
 	);
-	$tb_glow: -gtk-recolor(url("../assets/oxygen-wc-glow-symbolic.svg"));
+	$tb_slab_c: -gtk-recolor(
+		url("../assets/oxygen-wc-slab-c-symbolic.svg"),
+		error oxy-wc-band($tb_bg, 2),
+		warning oxy-wc-band($tb_bg, 1),
+		success oxy-wc-band($tb_bg, 0)
+	);
+	// pressed: the same bands in reverse order (dark top, light bottom)
+	$tb_slab_a_pressed: -gtk-recolor(
+		url("../assets/oxygen-wc-slab-a-symbolic.svg"),
+		error oxy-wc-band($tb_bg, 0),
+		warning oxy-wc-band($tb_bg, 1),
+		success oxy-wc-band($tb_bg, 2)
+	);
+	$tb_slab_b_pressed: -gtk-recolor(
+		url("../assets/oxygen-wc-slab-b-symbolic.svg"),
+		error oxy-wc-band($tb_bg, 3),
+		warning oxy-wc-band($tb_bg, 4),
+		success oxy-wc-band($tb_bg, 5)
+	);
+	$tb_slab_c_pressed: -gtk-recolor(
+		url("../assets/oxygen-wc-slab-c-symbolic.svg"),
+		error oxy-wc-band($tb_bg, 6),
+		warning oxy-wc-band($tb_bg, 7),
+		success oxy-wc-band($tb_bg, 8)
+	);
+	$tb_shadow_img: -gtk-recolor(
+		url("../assets/oxygen-wc-shadow-symbolic.svg"),
+		error oxy-wc-over($tb_shadow, $tb_bg, 0.08),
+		warning oxy-wc-over($tb_shadow, $tb_bg, 0.14),
+		success oxy-wc-over($tb_shadow, $tb_bg, 0.24)
+	);
+	$tb_glow: -gtk-recolor(
+		url("../assets/oxygen-wc-glow-symbolic.svg"),
+		error oxy-wc-over($hover, $tb_bg, 0.7),
+		warning oxy-wc-over($hover, $tb_bg, 0.4),
+		success oxy-wc-over($hover, $tb_bg, 0.18)
+	);
 
 	min-width: 21px;
 	min-height: 21px;
-	margin: 0 1px;
+	margin: $margin;
 	padding: 0;
 	border: none;
 	border-image: none;
@@ -201,7 +251,7 @@
 	opacity: 1;
 	color: gtk("@theme_titlebar_foreground");
 	background-color: transparent;
-	background-image: $tb_glyph, $tb_ring, $tb_slab;
+	background-image: $tb_glyph, $tb_ring, $tb_slab_c, $tb_slab_b, $tb_slab_a, $tb_shadow_img;
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: 21px 21px;
@@ -215,7 +265,7 @@
 	&:hover:not(:checked):not(:active) {
 		color: $hover;
 		background-color: transparent;
-		background-image: $tb_glyph, $tb_ring, $tb_slab, $tb_glow;
+		background-image: $tb_glyph, $tb_ring, $tb_slab_c, $tb_slab_b, $tb_slab_a, $tb_glow, $tb_shadow_img;
 		box-shadow: none;
 	}
 
@@ -223,13 +273,13 @@
 	&:active:hover {
 		color: $hover;
 		background-color: transparent;
-		background-image: $tb_glyph, $tb_ring, $tb_slab_pressed, $tb_glow;
+		background-image: $tb_glyph, $tb_ring, $tb_slab_c_pressed, $tb_slab_b_pressed, $tb_slab_a_pressed, $tb_glow, $tb_shadow_img;
 		box-shadow: none;
 	}
 
 	&:focus,
 	&:focus:not(:checked):not(:active) {
-		background-image: $tb_glyph, $tb_ring, $tb_slab;
+		background-image: $tb_glyph, $tb_ring, $tb_slab_c, $tb_slab_b, $tb_slab_a, $tb_shadow_img;
 		box-shadow: none;
 	}
 
@@ -239,7 +289,7 @@
 	&:backdrop:focus {
 		color: gtk("@theme_titlebar_foreground_backdrop");
 		background-color: transparent;
-		background-image: $tb_glyph, $tb_ring, $tb_slab;
+		background-image: $tb_glyph, $tb_ring, $tb_slab_c, $tb_slab_b, $tb_slab_a, $tb_shadow_img;
 		box-shadow: none;
 		opacity: 0.55;
 	}
