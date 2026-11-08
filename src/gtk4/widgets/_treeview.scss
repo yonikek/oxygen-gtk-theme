@@ -149,8 +149,9 @@ treeview.view {
 			background-color: gtk(
 				"@theme_button_background_normal"
 			);
+			background-image: oxy-gradient(gtk("@theme_button_background_normal"), 1.1, 0.95);
 			text-shadow: none;
-			box-shadow: none;
+			box-shadow: inset 0 1px 0 oxy-bevel(gtk("@theme_button_background_normal"));
 			&:hover {
 				@extend %column_header_button;
 				color: gtk("@theme_button_foreground_normal");
@@ -158,7 +159,8 @@ treeview.view {
 					gtk("@theme_button_decoration_hover"),
 					0.5
 				);
-				box-shadow: none;
+				background-image: oxy-tint-gradient(gtk("@theme_button_decoration_hover"), 0.6, 0.3);
+				box-shadow: inset 0 1px 0 oxy-bevel(gtk("@theme_button_background_normal"));
 			}
 			&:active {
 				@extend %column_header_button;
@@ -167,6 +169,8 @@ treeview.view {
 					gtk("@theme_button_decoration_hover"),
 					0.5
 				);
+				background-image: oxy-gradient(gtk("@theme_button_background_normal"), 0.88, 0.99);
+				box-shadow: oxy-sunken();
 			}
 		}
 		button:last-child {
@@ -199,8 +203,7 @@ treeview.view {
 	padding: 6px;
 	border-style: none solid solid none;
 	border-radius: 0;
-	background-image: none;
-	border-color: gtk("@borders");
+	border-color: oxy-outline(gtk("@theme_button_background_normal"), 0.75);
 	text-shadow: none;
 	&:disabled {
 		border-color: gtk("@insensitive_borders");

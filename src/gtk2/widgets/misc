@@ -160,9 +160,14 @@ style "null"
     }
 }
 
+# Gives toplevel windows an engine of their own so they are not drawn with the
+# pixmap images of the default style. This used to name the "adwaita" engine,
+# which is a separate package that many systems do not have; when GTK2 cannot
+# load a named engine it aborts parsing of the whole theme, which then falls
+# back to the stock look. The pixmap engine ships with GTK2 itself.
 style "toplevel_hack" {
 
-  engine "adwaita" {
+  engine "pixmap" {
   }
 }
 

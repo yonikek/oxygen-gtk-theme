@@ -94,6 +94,24 @@ cd src && ../build/src/build_theme.sh              # uses ~/.config/kdeglobals
 cd src && ../build/src/build_theme.sh -c Oxygen    # or name a scheme
 ```
 
+## GTK 2
+
+The GTK2 theme is a set of generated pixmaps (`gtk-2.0/gtkrc`, loaded through
+GTK2's `pixmap` engine, which ships with GTK2).
+
+If a GTK2 application shows the stock look instead:
+
+* GTK2 does not search `~/.local/share/themes`. It looks in `~/.themes` and in
+  `$GTK_DATA_PREFIX/share/themes` only, so a per-user install is invisible to
+  it. Install system-wide (for example through a package or NixOS), or test
+  without installing:
+  `GTK2_RC_FILES=/path/to/Oxygen/gtk-2.0/gtkrc gtk-demo`
+* Watch the terminal output: GTK2 prints `Unable to locate theme engine in
+  module_path` when a theme names an engine that is not installed, and it then
+  abandons the rest of the theme. Earlier versions of this theme (and Breeze GTK)
+  named the separate `adwaita` engine in one style; that dependency has been
+  removed.
+
 ## Credits and licence
 
 Based on Breeze GTK (KDE). Visual design and glyph geometry follow the Oxygen
