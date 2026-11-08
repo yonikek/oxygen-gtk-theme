@@ -14,20 +14,20 @@ scale {
 	}
 
 	slider {
-		min-width: 16px;
-		min-height: 16px;
-		border: 1px solid oxy-outline(gtk("@theme_button_background_normal"));
+		min-width: 15px;
+		min-height: 15px;
+		border: 1px solid;
+		border-color: oxy-slab-border(gtk("@theme_button_background_normal"));
 		border-radius: 50%;
-		box-shadow: oxy-raised(gtk("@theme_button_background_normal"));
+		box-shadow: oxy-slab-shadow(gtk("@theme_button_background_normal"));
 
 		background-color: gtk("@theme_button_background_normal");
-		background-image: oxy-gloss(gtk("@theme_button_background_normal"));
+		background-image: oxy-slab-face(gtk("@theme_button_background_normal"));
 		margin: -9px;
 
 		&:hover {
-			border-color: gtk("@theme_button_decoration_hover");
+			box-shadow: oxy-glow-ring(gtk("@theme_button_decoration_hover")), oxy-slab-shadow(gtk("@theme_button_background_normal"));
 			border-radius: 50%; // needed for double marks scales
-			background-image: oxy-gradient(gtk("@theme_button_background_normal"), 1.2, 1);
 
 			&:backdrop {
 				border-color: gtk(
@@ -53,9 +53,9 @@ scale {
 			}
 		}
 		&:active {
-			box-shadow: oxy-sunken();
+			box-shadow: oxy-slab-sunken(gtk("@theme_button_background_normal"));
 			background-color: gtk("@theme_button_background_normal");
-			background-image: oxy-gradient(gtk("@theme_button_background_normal"), 0.86, 0.98);
+			background-image: oxy-slab-face-sunken(gtk("@theme_button_background_normal"));
 			&:backdrop {
 				background-color: gtk(
 					"@theme_button_background_normal"
@@ -74,7 +74,7 @@ scale {
 	}
 
 	&:focus-within slider {
-		border-color: gtk("@theme_button_decoration_focus");
+		box-shadow: oxy-glow-ring(gtk("@theme_button_decoration_focus")), oxy-slab-shadow(gtk("@theme_button_background_normal"));
 		border-radius: 50%; // needed for double marks scales
 
 		&:backdrop {
@@ -85,18 +85,16 @@ scale {
 	}
 
 	trough {
-		min-width: 6px;
-		min-height: 6px;
+		min-width: 5px;
+		min-height: 5px;
 		border: 1px solid;
-		border-radius: $r;
+		border-radius: 3px;
 
-		background: gtkoverlay(
-			gtk("@theme_bg_color"),
-			gtkalpha(gtk("@theme_button_foreground_normal"), 0.5*0.2)
-		);
+		// StyleHelper::scrollHole: a groove filled with the dark colour
+		background: oxy-dark(gtk("@theme_bg_color"));
 
-		border-color: oxy-outline(gtk("@theme_bg_color"), 0.7);
-		box-shadow: oxy-field();
+		border-color: oxy-hole-border();
+		box-shadow: oxy-hole();
 
 		&:disabled, &.vertical:disabled {
 			background: gtkoverlayalpha(
@@ -111,31 +109,18 @@ scale {
 		}
 	}
 
+	// Oxygen sliders have no filled portion
 	highlight {
-		margin: -1px;
-		border-radius: $r;
-		background-color: gtk("@theme_bg_color");
-		background-image: oxy-gradient(gtk("@theme_bg_color"), 0.86, 0.7);
+		margin: 0;
+		background: none;
+		background-image: none;
+		border-color: transparent;
+		box-shadow: none;
 
-		border: 1px solid oxy-outline(gtk("@theme_bg_color"), 0.6);
-
+		&:backdrop,
 		&:disabled {
 			background: none;
 			border-color: transparent;
-		}
-
-		&:backdrop {
-			background-color: gtk("@theme_unfocused_bg_color");
-			background-image: oxy-gradient(
-				gtk("@theme_unfocused_bg_color"), 0.86, 0.7
-			);
-
-			border-color: gtk("@unfocused_borders");
-
-			&:disabled {
-				background: none;
-				border-color: transparent;
-			}
 		}
 	}
 

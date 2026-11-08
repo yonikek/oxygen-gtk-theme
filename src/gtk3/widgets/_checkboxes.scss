@@ -29,21 +29,22 @@ radio {
 		margin: 0;
 	}
 
-	min-height: 14px;
-	min-width: 14px;
+	min-height: 15px;
+	min-width: 15px;
 	//border: none;
 	animation-timing-function: $ease-out-quad;
+	// Oxygen draws check boxes and radio buttons as small raised slabs
 	background-color: gtk("@theme_button_background_normal");
-	background-image: oxy-gloss(gtk("@theme_button_background_normal"));
-	box-shadow: oxy-raised-flat(gtk("@theme_button_background_normal"));
-	border: 1px solid oxy-outline(gtk("@theme_button_background_normal"));
+	background-image: oxy-slab-face(gtk("@theme_button_background_normal"));
+	box-shadow: oxy-slab-shadow(gtk("@theme_button_background_normal"));
+	border: 1px solid;
+	border-color: oxy-slab-border(gtk("@theme_button_background_normal"));
 
 	-gtk-icon-shadow: none;
 	-gtk-icon-palette: fg gtk("@theme_fg_color");
 
 	&:hover {
-		border: 1px solid gtk("@theme_button_decoration_hover");
-		box-shadow: oxy-raised-flat-glow(gtk("@theme_button_background_normal"), gtk("@theme_button_decoration_hover"), 0.3);
+		box-shadow: oxy-glow-ring(gtk("@theme_button_decoration_hover")), oxy-slab-shadow(gtk("@theme_button_background_normal"));
 	}
 	&:disabled {
 		box-shadow: none;
@@ -57,17 +58,17 @@ radio {
 	}
 
 	&:active {
-		background: shade(gtk("@theme_base_color"), 0.9);
-		box-shadow: oxy-sunken();
+		background-image: oxy-slab-face-sunken(gtk("@theme_button_background_normal"));
+		box-shadow: oxy-slab-sunken(gtk("@theme_button_background_normal"));
 	}
 
 	&:focus {
-		border-color: gtk("@theme_button_decoration_focus");
+		box-shadow: oxy-glow-ring(gtk("@theme_button_decoration_focus")), oxy-slab-shadow(gtk("@theme_button_background_normal"));
 	}
 
 	&:indeterminate,
 	&:checked {
-		border-color: oxy-outline(gtk("@theme_button_background_normal"));
+		border-color: oxy-slab-border(gtk("@theme_button_background_normal"));
 		background-color: gtk("@theme_button_background_normal");
 
 		&:backdrop {

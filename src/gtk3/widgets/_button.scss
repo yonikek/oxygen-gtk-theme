@@ -126,51 +126,44 @@
 
 	@if $t == normal {
 		$obg: gtk("@theme_button_background_normal");
-		box-shadow: oxy-raised($obg);
+		$ohover: gtk("@theme_button_decoration_hover");
+		$ofocus: gtk("@theme_button_decoration_focus");
 		text-shadow: none;
 		-gtk-icon-shadow: none;
 
 		color: gtk("@theme_button_foreground_normal");
-		border-color: oxy-outline($obg);
 		background-color: $obg;
-		background-image: oxy-gradient($obg, 1.12, 0.94);
+		background-image: oxy-slab-face($obg);
+		border-color: oxy-slab-border($obg);
+		box-shadow: oxy-slab-shadow($obg);
 
 		&:backdrop {
-			box-shadow: oxy-raised-flat($obg);
-			background-color: $obg;
-			background-image: oxy-gradient($obg, 1.05, 0.97);
+			background-image: oxy-slab-face($obg);
+			border-color: oxy-slab-border($obg);
+			box-shadow: oxy-slab-shadow($obg);
 		}
 
 		&:checked {
-			background-image: oxy-gradient($obg, 0.88, 0.99);
-			box-shadow: oxy-sunken();
+			background-image: oxy-slab-face-sunken($obg);
+			border-color: transparent;
+			box-shadow: oxy-slab-sunken($obg);
 		}
 
 		&:hover {
-			border-color: gtk("@theme_button_decoration_hover");
-
 			&:not(:checked):not(:active) {
-				background-image: oxy-gloss($obg);
-				box-shadow: oxy-raised-glow(
-					$obg,
-					gtk("@theme_button_decoration_hover")
-				);
+				box-shadow: oxy-glow-ring($ohover), oxy-slab-shadow($obg);
 			}
 		}
 
 		&:active {
-			background-image: oxy-gradient($obg, 0.86, 0.98);
-			box-shadow: oxy-sunken();
+			background-image: oxy-slab-face-sunken($obg);
+			border-color: transparent;
+			box-shadow: oxy-slab-sunken($obg);
 		}
 
 		&:focus {
-			border-color: gtk("@theme_button_decoration_focus");
-
 			&:not(:checked):not(:active) {
-				box-shadow: oxy-raised-glow(
-					$obg,
-					gtk("@theme_button_decoration_focus")
-				);
+				box-shadow: oxy-glow-ring($ofocus), oxy-slab-shadow($obg);
 			}
 		}
 
@@ -192,6 +185,8 @@
 		}
 	} @else if $t == toolbutton {
 		$tbg: gtk("@theme_button_background_normal");
+		$thover: gtk("@theme_button_decoration_hover");
+		$tfocus: gtk("@theme_button_decoration_focus");
 		border-color: transparent;
 		background: transparent;
 		background-color: transparent;
@@ -202,33 +197,32 @@
 		text-shadow: none;
 		-gtk-icon-shadow: none;
 
+		// Oxygen tool buttons are flat until hovered, then show the raised slab
+		// with a halo; checked ones are sunken.
 		&:checked {
-			border-color: oxy-outline($tbg, 0.75);
-			background-image: oxy-gradient($tbg, 0.88, 0.99);
-			box-shadow: oxy-sunken();
+			background-image: oxy-slab-face-sunken($tbg);
+			border-color: transparent;
+			box-shadow: oxy-slab-sunken($tbg);
 		}
 
 		&:hover {
-			border-color: gtk("@theme_button_decoration_hover");
-
 			&:not(:checked):not(:active) {
-				background-image: oxy-gloss($tbg);
-				box-shadow: oxy-raised-flat-glow(
-					$tbg,
-					gtk("@theme_button_decoration_hover"),
-					0.3
-				);
+				background-image: oxy-slab-face($tbg);
+				border-color: oxy-slab-border($tbg);
+				box-shadow: oxy-glow-ring($thover), oxy-slab-shadow($tbg);
 			}
 		}
 
 		&:active {
-			border-color: gtk("@theme_button_decoration_hover");
-			background-image: oxy-gradient($tbg, 0.86, 0.98);
-			box-shadow: oxy-sunken();
+			background-image: oxy-slab-face-sunken($tbg);
+			border-color: transparent;
+			box-shadow: oxy-slab-sunken($tbg);
 		}
 
 		&:focus {
-			border-color: gtk("@theme_button_decoration_focus");
+			&:not(:checked):not(:active) {
+				box-shadow: oxy-glow-ring($tfocus);
+			}
 		}
 	}
 }

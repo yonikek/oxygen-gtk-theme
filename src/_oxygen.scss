@@ -50,6 +50,119 @@
 	);
 }
 
+// ---------------------------------------------------------------------------
+// Oxygen core
+// ---------------------------------------------------------------------------
+// Derived from the Oxygen style source (kstyle/oxygenstylehelper.cpp and
+// liboxygen/oxygenhelper.cpp). Oxygen computes four related colours from a
+// surface colour with KColorScheme::shade() in HCY space:
+//   light  = calcLightColor   dark = calcDarkColor   shadow = calcShadowColor
+//   mid    = calcMidColor
+// GTK's colour functions work in HSL, so these are fitted: the constants below
+// reproduce Oxygen's output for both a light surface (rgb 214,210,207 ->
+// light 242,241,240, dark 180,175,171, shadow 69,67,66) and a dark one (rgb
+// 49,54,59 -> 70,77,84 / 43,47,51 / 20,22,24) to within a few levels.
+// All of them take and return GTK colour expressions, so they keep following
+// the colour scheme at runtime.
+@function oxy-light($c) {
+	@return unquote("mix(shade(#{$c}, 1.126), white, 0.0745)");
+}
+@function oxy-dark($c) {
+	@return unquote("shade(#{$c}, 0.83)");
+}
+@function oxy-shadow($c) {
+	@return unquote("shade(#{$c}, 0.3)");
+}
+@function oxy-mid($c) {
+	@return unquote("shade(#{$c}, 0.94)");
+}
+// NOTE: GTK's mix(a, b, f) is `a` at f = 0 and `b` at f = 1 (f is the share of b).
+@function oxy-blend($a, $b, $f) {
+	@return unquote("mix(#{$a}, #{$b}, #{$f})");
+}
+
+// A slab is Oxygen's raised surface (buttons, check boxes, slider handles,
+// tabs). StyleHelper::fillButtonSlab fills it with a gradient that starts at
+// 79% light colour at the top edge and reaches the plain colour at 76% of the
+// height (the gradient line runs from -0.2h to +1.4h, light -> colour at 60%).
+@function oxy-slab-face($c) {
+	@return unquote(
+		"linear-gradient(to bottom, #{oxy-blend(oxy-light($c), $c, 0.21)} 0%, #{$c} 76%)"
+	);
+}
+// pressed / checked slabs (StyleHelper::slabSunken): the gradient is flipped
+// and shorter, 50% light at the top to the plain colour at the bottom.
+@function oxy-slab-face-sunken($c) {
+	@return unquote(
+		"linear-gradient(to bottom, #{oxy-blend(oxy-light($c), $c, 0.5)} 0%, #{$c} 100%)"
+	);
+}
+// The slab's bevel ring is light at the top and fades into the surface colour
+// towards the bottom: border-color is top, right, bottom, left.
+@function oxy-slab-border($c) {
+	@return unquote(
+		"#{oxy-light($c)} #{oxy-blend(oxy-light($c), $c, 0.5)} #{oxy-blend(oxy-light($c), $c, 0.8)} #{oxy-blend(oxy-light($c), $c, 0.5)}"
+	);
+}
+// Oxygen has no dark outline. Edges come from a soft shadow that hugs the slab
+// (drawShadow: alpha 0.45 near the slab fading to 0 over 2px, offset 0.8px down).
+@function oxy-slab-shadow($c) {
+	@return unquote(
+		"0 0 0 1px #{gtkalpha(oxy-shadow($c), 0.16)}, 0 1px 3px #{gtkalpha(oxy-shadow($c), 0.4)}"
+	);
+}
+// pressed / checked slab: dark inner shadow (inverse shadow) and a bright line
+// along the bottom edge (the hole contrast).
+@function oxy-slab-sunken($c) {
+	@return unquote(
+		"inset 0 1px 3px #{gtkalpha(oxy-shadow($c), 0.5)}, inset 0 0 0 1px #{gtkalpha(oxy-shadow($c), 0.18)}, 0 1px 0 #{gtkalpha(oxy-light($c), 0.7)}"
+	);
+}
+// hover / focus: a 3px halo in the glow colour (drawOuterGlow), in addition
+// to the slab shadow.
+@function oxy-glow-ring($g) {
+	@return unquote(
+		"0 0 0 1px #{gtkalpha($g, 0.85)}, 0 0 0 2px #{gtkalpha($g, 0.45)}, 0 0 0 3px #{gtkalpha($g, 0.18)}"
+	);
+}
+
+// Progress bar indicator (StyleHelper::progressBarIndicator): the highlight
+// colour mixed 20% with the dark colour, with a sheen of the light colour along
+// the top and bottom edges, and a bevel that is light at the top and dark at
+// the bottom.
+@function oxy-progress-fill($h, $win: gtk("@theme_bg_color")) {
+	$base: oxy-blend($h, oxy-dark($win), 0.2);
+	$sheen: oxy-blend(oxy-light($h), oxy-light($win), 0.3);
+	@return unquote(
+		"linear-gradient(to bottom, #{$sheen} 0%, #{$base} 45%, #{$base} 62%, #{$sheen} 100%)"
+	);
+}
+@function oxy-progress-border($h) {
+	@return unquote("#{oxy-light($h)} #{$h} #{oxy-dark($h)} #{$h}");
+}
+
+// Scroll bar handle (Style::renderScrollBarHandle / StyleHelper::scrollHandle):
+// a gradient from the button colour to its mid colour, with a light contrast
+// over the upper half.
+@function oxy-scroll-handle($c) {
+	@return unquote(
+		"linear-gradient(to bottom, #{oxy-blend($c, oxy-light($c), 0.8)} 0%, #{oxy-blend($c, oxy-light($c), 0.3)} 50%, #{oxy-mid($c)} 100%)"
+	);
+}
+
+// Selected tab (Style::drawTabBarTabShapeControl): the tab and the page frame
+// share the same slab edge; the tab is then filled with a light sheen fading
+// out downwards (StyleHelper::fillTab).
+@function oxy-tab-select($bg) {
+	@return unquote(
+		"linear-gradient(to bottom, #{gtkalpha(oxy-light($bg), 0.7)} 0%, #{gtkalpha(oxy-light($bg), 0)} 100%)"
+	);
+}
+// the dark line used around frames, tabs and page edges
+@function oxy-edge($bg: gtk("@theme_bg_color"), $a: 0.6) {
+	@return gtkalpha(oxy-dark($bg), $a);
+}
+
 // dark outline derived from a surface colour
 @function oxy-outline($c, $f: 0.62) {
 	@return unquote("shade(#{$c}, #{$f})");
@@ -96,9 +209,30 @@
 	@return gtkalpha(oxy-bevel(gtk("@theme_bg_color"), 1.3), 0.8);
 }
 
-// inset field shadow used for entries and troughs
+// A hole is Oxygen's sunken surface (line edits, scroll / slider / progress
+// grooves). StyleHelper::hole draws an inverse shadow that is dark along the top
+// edge, an outline that is faint at the top and darker towards the bottom, and
+// a bright contrast line just outside the bottom edge.
+@function oxy-hole-border($bg: gtk("@theme_bg_color")) {
+	@return unquote(
+		"#{gtkalpha(oxy-dark($bg), 0.45)} #{gtkalpha(oxy-dark($bg), 0.6)} #{gtkalpha(oxy-dark($bg), 0.85)} #{gtkalpha(oxy-dark($bg), 0.6)}"
+	);
+}
+@function oxy-hole($bg: gtk("@theme_bg_color")) {
+	@return unquote(
+		"inset 0 1px 3px #{gtkalpha(oxy-shadow($bg), 0.4)}, 0 1px 0 #{gtkalpha(oxy-light($bg), 0.85)}"
+	);
+}
+// focus / hover: the glow runs along the inside of the hole (inverse glow)
+@function oxy-hole-glow($g, $bg: gtk("@theme_bg_color")) {
+	@return unquote(
+		"inset 0 0 0 1px #{gtkalpha($g, 0.9)}, inset 0 0 3px 1px #{gtkalpha($g, 0.5)}, 0 1px 0 #{gtkalpha(oxy-light($bg), 0.85)}"
+	);
+}
+
+// inset field shadow used for entries and troughs (kept for older call sites)
 @function oxy-field($a: 0.2) {
-	@return unquote("inset 0 1px 2px rgba(0, 0, 0, #{$a}), 0 1px 0 #{oxy-hole-contrast()}");
+	@return oxy-hole();
 }
 
 // raised surface with a coloured glow ring (hover / focus)
@@ -109,7 +243,7 @@
 	@return unquote("#{oxy-raised-flat($c)}, #{oxy-glow($glow, $a)}");
 }
 @function oxy-field-glow($glow, $a: 0.45) {
-	@return unquote("#{oxy-field()}, #{oxy-glow($glow, $a)}");
+	@return oxy-hole-glow($glow);
 }
 
 // translucent highlight gradient (menu items, hover tiles)

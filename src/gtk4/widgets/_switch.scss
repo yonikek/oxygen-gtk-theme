@@ -13,16 +13,11 @@ switch {
 	border: 1px solid;
 	border-radius: 12px;
 	color: transparent;
-	background-color: gtkalpha(
-		gtk("@theme_button_foreground_normal"),
-		0.05
-	);
-	border-color: gtkalpha(
-		gtk("@theme_button_foreground_normal"),
-		0.222
-	);
+	// the groove is Oxygen's dark hole, like a slider groove
+	background-color: oxy-dark(gtk("@theme_bg_color"));
+	border-color: oxy-hole-border();
 	text-shadow: none;
-	box-shadow: oxy-field();
+	box-shadow: oxy-hole();
 
 	&:disabled {
 		box-shadow: none;
@@ -33,11 +28,9 @@ switch {
 	}
 
 	&:checked {
-		background: gtkalpha(
-			gtk("@theme_button_decoration_hover"),
-			0.333
-		);
-		border-color: gtk("@theme_button_decoration_hover");
+		background-color: gtk("@theme_selected_bg_color");
+		background-image: oxy-progress-fill(gtk("@theme_selected_bg_color"));
+		border-color: oxy-progress-border(gtk("@theme_selected_bg_color"));
 
 		&:disabled {
 			background: gtkalpha(
@@ -67,10 +60,10 @@ switch {
 		border: 1px solid;
 		border-radius: $switch-height / 2;
 
-		box-shadow: oxy-raised(gtk("@theme_button_background_normal"));
-		border-color: oxy-outline(gtk("@theme_button_background_normal"));
+		box-shadow: oxy-slab-shadow(gtk("@theme_button_background_normal"));
+		border-color: oxy-slab-border(gtk("@theme_button_background_normal"));
 		background-color: gtk("@theme_button_background_normal");
-		background-image: oxy-gloss(gtk("@theme_button_background_normal"));
+		background-image: oxy-slab-face(gtk("@theme_button_background_normal"));
 	}
 
 	&:hover slider {

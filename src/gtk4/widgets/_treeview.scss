@@ -149,9 +149,11 @@ treeview.view {
 			background-color: gtk(
 				"@theme_button_background_normal"
 			);
-			background-image: oxy-gradient(gtk("@theme_button_background_normal"), 1.1, 0.95);
+			background-image: none;
 			text-shadow: none;
-			box-shadow: inset 0 1px 0 oxy-bevel(gtk("@theme_button_background_normal"));
+			// Oxygen's header is flat; sections are separated by an etched line:
+			// a dark line with a light line beside it
+			box-shadow: inset 0 -1px 0 gtkalpha(oxy-light(gtk("@theme_bg_color")), 0.9), inset -1px 0 0 gtkalpha(oxy-light(gtk("@theme_bg_color")), 0.9);
 			&:hover {
 				@extend %column_header_button;
 				color: gtk("@theme_button_foreground_normal");
@@ -159,8 +161,8 @@ treeview.view {
 					gtk("@theme_button_decoration_hover"),
 					0.5
 				);
-				background-image: oxy-tint-gradient(gtk("@theme_button_decoration_hover"), 0.6, 0.3);
-				box-shadow: inset 0 1px 0 oxy-bevel(gtk("@theme_button_background_normal"));
+				background-image: none;
+				box-shadow: inset 0 -1px 0 gtkalpha(oxy-light(gtk("@theme_bg_color")), 0.9), inset -1px 0 0 gtkalpha(oxy-light(gtk("@theme_bg_color")), 0.9);
 			}
 			&:active {
 				@extend %column_header_button;
@@ -169,8 +171,8 @@ treeview.view {
 					gtk("@theme_button_decoration_hover"),
 					0.5
 				);
-				background-image: oxy-gradient(gtk("@theme_button_background_normal"), 0.88, 0.99);
-				box-shadow: oxy-sunken();
+				background-image: none;
+				box-shadow: inset 0 1px 3px gtkalpha(oxy-shadow(gtk("@theme_bg_color")), 0.35);
 			}
 		}
 		button:last-child {
@@ -203,7 +205,7 @@ treeview.view {
 	padding: 6px;
 	border-style: none solid solid none;
 	border-radius: 0;
-	border-color: oxy-outline(gtk("@theme_button_background_normal"), 0.75);
+	border-color: oxy-edge(gtk("@theme_bg_color"), 0.8);
 	text-shadow: none;
 	&:disabled {
 		border-color: gtk("@insensitive_borders");

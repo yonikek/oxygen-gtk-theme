@@ -94,6 +94,38 @@ cd src && ../build/src/build_theme.sh              # uses ~/.config/kdeglobals
 cd src && ../build/src/build_theme.sh -c Oxygen    # or name a scheme
 ```
 
+## How the widget look was derived
+
+The widgets follow the Oxygen style's own drawing code
+(`kstyle/oxygenstylehelper.cpp`, `kstyle/oxygenstyle.cpp`,
+`liboxygen/oxygenhelper.cpp`), not Breeze:
+
+* **Colours.** Oxygen derives *light*, *dark*, *shadow* and *mid* colours from a
+  surface colour with `KColorScheme::shade()` in HCY space. `tools/oxygen_colors.py`
+  ports that, and the GTK expressions `oxy-light`, `oxy-dark`, `oxy-shadow` and
+  `oxy-mid` in `src/_oxygen.scss` are fitted to it for both light and dark
+  surfaces.
+* **Slabs** (buttons, check boxes, radio buttons, slider handles, tabs): no dark
+  outline. A soft shadow hugs the shape, a light bevel runs round the top edge,
+  and the face is a gradient from 79% light colour at the top to the plain colour
+  at 76% of the height. Hover and focus add a 3px halo in the hover / focus
+  colour; pressed and checked slabs are sunken (inner shadow, flipped gradient,
+  bright line below).
+* **Holes** (text fields, slider / scroll bar / progress grooves): an inner
+  shadow along the top, an outline that darkens towards the bottom, and a bright
+  contrast line just below. Grooves are filled with the dark colour. Focus draws
+  the glow along the inside of the hole.
+* **Scroll bars**: a 15px dark groove holding a raised, glossy 9px handle.
+  Overlay scroll bars keep the thin layout.
+* **Sliders** have a dark groove and a round raised handle but no filled part,
+  as in Qt. **Progress bars** use the highlight colour mixed 20% with the dark
+  colour, a sheen at the top and bottom, and a light-to-dark bevel.
+* **Tabs and frames**: the page frame is a slab edge with no fill; the selected
+  tab shares it and gets a fading light sheen, unselected tabs are flat, darker
+  and translucent. Tree view headers are flat with an etched dark/light line.
+* **Selection** is a gradient from 130% of the highlight colour to the highlight
+  colour.
+
 ## GTK 2
 
 The GTK2 theme is a set of generated pixmaps (`gtk-2.0/gtkrc`, loaded through

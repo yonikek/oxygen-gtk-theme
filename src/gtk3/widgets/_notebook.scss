@@ -11,35 +11,36 @@ notebook {
 	&.frame {
 		border: none;
 		padding: 0px;
-		box-shadow: inset 0px 0px 0px 1px gtk("@borders");
+		// the page frame is a slab edge: a dark line with a light bevel inside
+		box-shadow: inset 0px 0px 0px 1px oxy-edge(), inset 1px 1px 0px 1px gtkalpha(oxy-light(gtk("@theme_bg_color")), 0.8);
 	}
 
 	> header {
 		padding: 0px;
 		border: none;
 		background-color: gtk("@theme_bg_color");
-		//box-shadow: inset 0 -1px gtk("@borders");
+		//box-shadow: inset 0 -1px oxy-edge();
 
 		&.top {
-			box-shadow: inset 0 -1px gtk("@borders"); // border
+			box-shadow: inset 0 -1px oxy-edge(); // border
 			&:backdrop {
 				box-shadow: inset 0 -1px gtk("@unfocused_borders");
 			}
 		}
 		&.bottom {
-			box-shadow: inset 0 1px gtk("@borders");
+			box-shadow: inset 0 1px oxy-edge();
 			&:backdrop {
 				box-shadow: inset 0 1px gtk("@unfocused_borders");
 			}
 		}
 		&.right {
-			box-shadow: inset 1px 0 gtk("@borders");
+			box-shadow: inset 1px 0 oxy-edge();
 			&:backdrop {
 				box-shadow: inset 1px 0 gtk("@unfocused_borders");
 			}
 		}
 		&.left {
-			box-shadow: inset -1px 0 gtk("@borders");
+			box-shadow: inset -1px 0 oxy-edge();
 			&:backdrop {
 				box-shadow: inset -1px 0 gtk("@unfocused_borders");
 			}
@@ -62,14 +63,12 @@ notebook {
 					> tab {
 						padding: 4px 6px;
 						padding-bottom: 7px;
-						border: 1px solid oxy-outline(gtk("@theme_bg_color"), 0.8);
+						border: 1px solid oxy-edge();
 						border-#{$_border}: none;
 						border-#{$_tab}: 3px solid transparent;
-						background-color: gtkalpha(
-							gtk("@theme_fg_color"),
-							0.2
-						);
-						background-image: oxy-tab-gradient(gtk("@theme_bg_color"));
+						// unselected tabs are flat, darker and translucent
+						background-color: oxy-edge(gtk("@theme_bg_color"), 0.35);
+						background-image: none;
 						border-radius: $_radius_all;
 
 						&:hover,
@@ -135,13 +134,13 @@ notebook {
 
 						&:checked {
 							transition: none;
-							border-color: oxy-outline(gtk("@theme_bg_color"), 0.75);
-							border-#{$_tab}-color: oxy-bevel(gtk("@theme_bg_color"), 1.3);
+							border-color: oxy-edge();
+							border-#{$_tab}-color: oxy-light(gtk("@theme_bg_color"));
 
 							border-radius: $_radius_all;
 
 							background-color: gtk("@theme_bg_color");
-							background-image: oxy-gradient(gtk("@theme_bg_color"), 1.06, 1);
+							background-image: oxy-tab-select(gtk("@theme_bg_color"));
 						}
 					}
 

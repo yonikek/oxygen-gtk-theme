@@ -8,14 +8,14 @@ progressbar {
 	&.horizontal {
 		trough,
 		progress {
-			min-height: 10px;
+			min-height: 14px;
 		}
 	}
 
 	&.vertical {
 		trough,
 		progress {
-			min-width: 10px;
+			min-width: 14px;
 		}
 	}
 
@@ -26,27 +26,26 @@ progressbar {
 		0.3
 	);
 
+	// groove: StyleHelper::scrollHole, filled with the dark colour
 	trough {
 		border: 1px solid;
-		border-radius: $r;
-		background: gtkoverlay(
-			gtk("@theme_bg_color"),
-			gtkalpha(gtk("@theme_button_foreground_normal"), 0.5*0.2)
-		);
-
-		border-color: oxy-outline(gtk("@theme_bg_color"), 0.7);
-		box-shadow: oxy-field();
+		border-radius: 3px;
+		background: oxy-dark(gtk("@theme_bg_color"));
+		border-color: oxy-hole-border();
+		box-shadow: oxy-hole();
 	}
 
+	// indicator: StyleHelper::progressBarIndicator. The fill is the highlight
+	// colour mixed 20% with the dark colour, with a light sheen along the top and
+	// bottom edges and a bevel that is light at the top and dark at the bottom.
 	progress {
 		border: 1px solid;
 		margin: -1px;
-		border-radius: $r;
-		box-shadow: inset 0 1px 0 oxy-bevel(gtk("@theme_selected_bg_color"), 1.4);
+		border-radius: 3px;
+		box-shadow: none;
 		background-color: gtk("@theme_selected_bg_color");
-		background-image: oxy-gradient(gtk("@theme_selected_bg_color"), 1.2, 0.92);
-
-		border: 1px solid oxy-outline(gtk("@theme_selected_bg_color"), 0.7);
+		background-image: oxy-progress-fill(gtk("@theme_selected_bg_color"));
+		border-color: oxy-progress-border(gtk("@theme_selected_bg_color"));
 	}
 
 	&:backdrop progress {
