@@ -215,12 +215,12 @@
 // a bright contrast line just outside the bottom edge.
 @function oxy-hole-border($bg: gtk("@theme_bg_color")) {
 	@return unquote(
-		"#{gtkalpha(oxy-dark($bg), 0.45)} #{gtkalpha(oxy-dark($bg), 0.6)} #{gtkalpha(oxy-dark($bg), 0.85)} #{gtkalpha(oxy-dark($bg), 0.6)}"
+		"#{gtkalpha(oxy-dark($bg), 0.12)} #{gtkalpha(oxy-dark($bg), 0.5)} #{gtkalpha(oxy-dark($bg), 0.85)} #{gtkalpha(oxy-dark($bg), 0.5)}"
 	);
 }
 @function oxy-hole($bg: gtk("@theme_bg_color")) {
 	@return unquote(
-		"inset 0 1px 3px #{gtkalpha(oxy-shadow($bg), 0.4)}, 0 1px 0 #{gtkalpha(oxy-light($bg), 0.85)}"
+		"inset 0 2px 3px #{gtkalpha(oxy-shadow($bg), 0.5)}, inset 0 0 2px #{gtkalpha(oxy-shadow($bg), 0.2)}, 0 1px 0 #{gtkalpha(oxy-light($bg), 0.85)}"
 	);
 }
 // focus / hover: the glow runs along the inside of the hole (inverse glow)

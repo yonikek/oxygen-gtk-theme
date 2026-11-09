@@ -136,13 +136,25 @@ menu,
 		&.top {
 			margin-top: -1.5mm;
 			border: none;
-			-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-up-symbolic.svg"));
+			// the arrow node spans the whole menu width, so draw the glyph as a
+			// fixed-size centred background instead of stretching an icon
+			-gtk-icon-source: none;
+			background-image: -gtk-recolor(url("../assets/oxygen-arrow-up-symbolic.svg"));
+			background-size: 16px 16px;
+			background-position: center;
+			background-repeat: no-repeat;
 		}
 
 		&.bottom {
 			margin-bottom: -1.5mm;
 			border: none;
-			-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-down-symbolic.svg"));
+			// the arrow node spans the whole menu width, so draw the glyph as a
+			// fixed-size centred background instead of stretching an icon
+			-gtk-icon-source: none;
+			background-image: -gtk-recolor(url("../assets/oxygen-arrow-down-symbolic.svg"));
+			background-size: 16px 16px;
+			background-position: center;
+			background-repeat: no-repeat;
 		}
 
 		&:hover {

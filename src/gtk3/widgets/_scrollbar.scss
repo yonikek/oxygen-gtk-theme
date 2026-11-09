@@ -1,5 +1,60 @@
 @charset "UTF-8";
 
+@mixin oxy-scrollbar-classic {
+	padding: 0;
+	background-color: transparent;
+
+	&.vertical,
+	&.horizontal {
+		border: none;
+	}
+
+	trough {
+		margin: 0;
+		min-width: 15px;
+		min-height: 15px;
+		border: 1px solid;
+		border-radius: 3px;
+		background: oxy-dark(gtk("@theme_bg_color"));
+		border-color: oxy-hole-border();
+		box-shadow: oxy-hole();
+	}
+
+	&.horizontal trough {
+		margin: 0;
+		min-width: 15px;
+		min-height: 15px;
+	}
+
+	slider,
+	:not(webkitwebview) & slider {
+		margin: 2px;
+		border: 1px solid;
+		border-radius: 3px;
+		min-width: 9px;
+		min-height: 21px;
+		background-clip: border-box;
+		background-color: gtk("@theme_button_background_normal");
+		background-image: oxy-scroll-handle(gtk("@theme_button_background_normal"));
+		border-color: oxy-slab-border(gtk("@theme_button_background_normal"));
+		box-shadow: oxy-slab-shadow(gtk("@theme_button_background_normal"));
+	}
+
+	&.horizontal slider,
+	:not(webkitwebview) &.horizontal slider {
+		margin: 2px;
+		min-width: 21px;
+		min-height: 9px;
+	}
+
+	// glow in the hover colour while hovered or dragged
+	&:hover slider,
+	&.dragging slider {
+		box-shadow: oxy-glow-ring(gtk("@theme_button_decoration_hover")), oxy-slab-shadow(gtk("@theme_button_background_normal"));
+	}
+}
+
+
 /**************
  * Scrollbars *
  **************/
@@ -214,58 +269,10 @@ scrollbar {
 
 	// Oxygen's classic scroll bar: a 15px dark groove (renderScrollBarHole) that
 	// holds a raised glossy handle (renderScrollBarHandle). Overlay scroll bars
-	// keep the thin layout above.
-	&:not(.overlay-indicator) {
-		padding: 0;
-		background-color: transparent;
-
-		&.vertical,
-		&.horizontal {
-			border: none;
-		}
-
-		trough {
-			margin: 0;
-			min-width: 15px;
-			min-height: 15px;
-			border: 1px solid;
-			border-radius: 3px;
-			background: oxy-dark(gtk("@theme_bg_color"));
-			border-color: oxy-hole-border();
-			box-shadow: oxy-hole();
-		}
-
-		&.horizontal trough {
-			margin: 0;
-			min-width: 15px;
-			min-height: 15px;
-		}
-
-		slider,
-		:not(webkitwebview) & slider {
-			margin: 2px;
-			border: 1px solid;
-			border-radius: 3px;
-			min-width: 9px;
-			min-height: 21px;
-			background-clip: border-box;
-			background-color: gtk("@theme_button_background_normal");
-			background-image: oxy-scroll-handle(gtk("@theme_button_background_normal"));
-			border-color: oxy-slab-border(gtk("@theme_button_background_normal"));
-			box-shadow: oxy-slab-shadow(gtk("@theme_button_background_normal"));
-		}
-
-		&.horizontal slider,
-		:not(webkitwebview) &.horizontal slider {
-			margin: 2px;
-			min-width: 21px;
-			min-height: 9px;
-		}
-
-		// glow in the hover colour while hovered or dragged
-		&:hover slider,
-		&.dragging slider {
-			box-shadow: oxy-glow-ring(gtk("@theme_button_decoration_hover")), oxy-slab-shadow(gtk("@theme_button_background_normal"));
-		}
+	// keep the thin layout until they are hovered or dragged, then expand to it.
+	&:not(.overlay-indicator),
+	&.overlay-indicator.hovering,
+	&.overlay-indicator.dragging {
+		@include oxy-scrollbar-classic;
 	}
 }
