@@ -48,6 +48,11 @@ render_theme () {
     -g "${THEME_BUILD_DIR}/gtk-2.0" -G "${THEME_BUILD_DIR}" -b "$4"
   build_sass gtk3/gtk.scss "${THEME_BUILD_DIR}/gtk-3.0/gtk.css" "${THEME_BUILD_DIR}"
   build_sass gtk4/gtk.scss "${THEME_BUILD_DIR}/gtk-4.0/gtk.css" "${THEME_BUILD_DIR}"
+  # Oxygen has no overlay scroll bars. GTK reads a settings.ini placed next to
+  # a theme's gtk.css as that theme's default settings.
+  for gtk_dir in gtk-3.0 gtk-4.0; do
+    printf '[Settings]\ngtk-overlay-scrolling=false\n' > "${THEME_BUILD_DIR}/${gtk_dir}/settings.ini"
+  done
   rm -f "${THEME_BUILD_DIR}/_global.scss"
   install_theme "${THEME_BUILD_DIR}" "$2" "$3"
 }

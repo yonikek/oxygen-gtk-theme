@@ -126,6 +126,22 @@ The widgets follow the Oxygen style's own drawing code
 * **Selection** is a gradient from 130% of the highlight colour to the highlight
   colour.
 
+## Scroll bars
+
+Oxygen has no overlay scroll bars, so the theme asks GTK for permanent ones: the
+build writes `gtk-3.0/settings.ini` and `gtk-4.0/settings.ini` (GTK reads a
+`settings.ini` next to a theme's `gtk.css` as that theme's default settings)
+containing `gtk-overlay-scrolling=false`. Some settings sources outrank a theme's
+defaults, so if you still get overlay scroll bars, set it yourself:
+
+* `gsettings set org.gnome.desktop.interface overlay-scrolling false`
+* or `gtk-overlay-scrolling=false` under `[Settings]` in
+  `~/.config/gtk-3.0/settings.ini` and `~/.config/gtk-4.0/settings.ini`
+* GTK3 also honours `GTK_OVERLAY_SCROLLING=0` in the environment (GTK4 does not)
+
+Applications that explicitly request overlay scrolling still get it; their bars
+expand into the Oxygen scroll bar while hovered or dragged.
+
 ## GTK 2
 
 The GTK2 theme is a set of generated pixmaps (`gtk-2.0/gtkrc`, loaded through
