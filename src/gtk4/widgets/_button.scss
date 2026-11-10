@@ -391,6 +391,7 @@ combobox {
 		}
 
 		arrow {
+			-gtk-icon-shadow: 0 1px gtkalpha(oxy-light(gtk("@theme_button_background_normal")), 0.8);
 			min-width: 14px;
 
 			&:dir(rtl) {

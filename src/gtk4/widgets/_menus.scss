@@ -71,19 +71,24 @@ popover, popover.background {
 
 	contents, > arrow {
 		padding: 4px; // Use px to avoid overflow when using fractional scaling
-		background-color: gtkmix(gtk("@theme_bg_color"), gtk("@theme_base_color"), 0.3);
-		border: 1px solid gtk("@borders");
-		border-radius: $r;
+		background-color: gtk("@theme_bg_color");
+		background-image: oxy-menu-fill(gtk("@theme_bg_color"));
+		border: 1px solid oxy-edge();
+		border-radius: 5px;
 
 		$shadow: rgba(0, 0, 0, 0.25);
-		box-shadow: 0px 0px 2mm $shadow,
+		box-shadow: oxy-menu-frame(gtk("@theme_bg_color")),
+					0px 0px 2mm $shadow,
 					0px 0.25mm 1mm scale-color($shadow, $alpha: -40%);
 	}
 
-	// axes borders in a composited env
+	// Oxygen's etched separator
 	separator {
-		color: gtk("@borders");
-		margin: 0.75mm 0;
+		margin: 0.75mm 0.5mm;
+		min-height: 1px;
+		background-color: transparent;
+		background-image: oxy-separator-line(gtk("@theme_bg_color"));
+		box-shadow: 0 1px 0 gtkalpha(oxy-light(gtk("@theme_bg_color")), 0.9);
 	}
 
 	modelbutton {
@@ -115,11 +120,14 @@ popover, popover.background {
 			-gtk-icon-source: -gtk-recolor(url("../assets/oxygen-arrow-right-symbolic.svg"));
 		}
 
+		// Oxygen's highlight is a flat sunken hole in the mid colour, not a
+		// coloured selection
 		&:hover {
-			background-color: gtkalpha(gtk("@theme_selected_bg_color"), 0.3);
-			background-image: oxy-tint-gradient(gtk("@theme_selected_bg_color"));
-			border: 1px solid gtk("@theme_button_decoration_focus"); // Use px to avoid strange thickness when fractional scaling is used
-			border-radius: $r;
+			background-color: oxy-menu-item-fill(gtk("@theme_bg_color"));
+			background-image: none;
+			border: 1px solid transparent; // Use px to avoid strange thickness when fractional scaling is used
+			border-radius: 3px;
+			box-shadow: oxy-hole(gtk("@theme_bg_color"));
 		}
 
 		&:disabled {

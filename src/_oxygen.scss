@@ -163,6 +163,55 @@
 	@return gtkalpha(oxy-dark($bg), $a);
 }
 
+// Menus (Style::drawPanelMenuPrimitive -> Helper::renderMenuBackground +
+// drawFloatFrame). A menu uses the window gradient (lighter at the top, the
+// window colour at the middle, darker at the bottom, over 75% of its height)
+// inside a frame that has a bright inner top line.
+@function oxy-menu-fill($c) {
+	@return unquote(
+		"linear-gradient(to bottom, shade(#{$c}, 1.05) 0%, #{$c} 38%, shade(#{$c}, 0.93) 75%)"
+	);
+}
+@function oxy-menu-frame($c) {
+	@return unquote(
+		"inset 0 1px 0 #{gtkalpha(oxy-light($c), 0.9)}, inset 1px 0 0 #{gtkalpha(oxy-light($c), 0.35)}, inset -1px 0 0 #{gtkalpha(oxy-light($c), 0.35)}"
+	);
+}
+// Menu items and menu bar items (Style::renderMenuItemRect, default highlight
+// mode "dark"): not a coloured selection but a flat sunken hole filled with
+// the surface's mid colour.
+@function oxy-menu-item-fill($c) {
+	@return oxy-mid($c);
+}
+// Separators (Helper::drawSeparator): a dark line that fades out at both ends
+// with a bright line just below it.
+@function oxy-separator-line($c) {
+	@return unquote(
+		"linear-gradient(to right, #{gtkalpha(oxy-dark($c), 0)} 0%, #{oxy-dark($c)} 30%, #{oxy-dark($c)} 70%, #{gtkalpha(oxy-dark($c), 0)} 100%)"
+	);
+}
+// Tooltips (Style::drawPanelTipLabelPrimitive): a vertical gradient from the
+// top to the bottom colour with an outline that is light along the top half
+// and fades to the bottom colour.
+@function oxy-tooltip-fill($c) {
+	@return unquote("linear-gradient(to bottom, shade(#{$c}, 1.05), shade(#{$c}, 0.93))");
+}
+@function oxy-tooltip-border($c) {
+	@return unquote(
+		"#{oxy-light($c)} #{oxy-blend(oxy-light($c), oxy-outline($c, 0.93), 0.5)} #{oxy-outline($c, 0.93)} #{oxy-blend(oxy-light($c), oxy-outline($c, 0.93), 0.5)}"
+	);
+}
+
+// An editable combo box is one hole with the arrow inside it, but GTK builds it
+// from an entry and a button. Where they meet the inner shadow must not run
+// down the joint, so the shadow is top-only (negative spread keeps it off the
+// sides).
+@function oxy-hole-joined($bg: gtk("@theme_bg_color")) {
+	@return unquote(
+		"inset 0 2px 2px -1px #{gtkalpha(oxy-shadow($bg), 0.5)}, 0 1px 0 #{gtkalpha(oxy-light($bg), 0.85)}"
+	);
+}
+
 // dark outline derived from a surface colour
 @function oxy-outline($c, $f: 0.62) {
 	@return unquote("shade(#{$c}, #{$f})");

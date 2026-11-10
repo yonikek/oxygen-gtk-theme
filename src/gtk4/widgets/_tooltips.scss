@@ -9,7 +9,7 @@ tooltip {
 		// background-color needs to be set this way otherwise it gets drawn twice
 		// see https://bugzilla.gnome.org/show_bug.cgi?id=736155 for details.
 		background-color: gtk("@tooltip_background");
-		background-image: oxy-gradient(gtk("@tooltip_background"), 1.15, 0.94);
+		background-image: oxy-tooltip-fill(gtk("@tooltip_background"));
 		background-clip: padding-box;
 	}
 
@@ -18,7 +18,8 @@ tooltip {
 	border-radius: $r;
 	box-shadow: none; // otherwise it gets inherited by windowframe.csd
 	text-shadow: none;
-	border: 1px solid gtk("@tooltip_border");
+	border: 1px solid;
+	border-color: oxy-tooltip-border(gtk("@tooltip_background"));
 	&.window-frame.csd {
 		background-color: transparent;
 		box-shadow: none;

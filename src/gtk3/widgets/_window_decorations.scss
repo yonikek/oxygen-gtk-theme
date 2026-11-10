@@ -8,7 +8,9 @@ decoration {
 	$shadow: rgba(0, 0, 0, 0.5);
 
 	//border: 1px solid transparent;
-	border-radius: $window-border-radius $window-border-radius 0 0;
+	// Oxygen rounds all four corners (3.5px) unless the window is maximised,
+	// tiled or fullscreen
+	border-radius: $window-border-radius;
 	border-width: 0px;
 	box-shadow: oxy-window-glow(
 		gtk("@theme_bg_color"),
@@ -66,6 +68,13 @@ decoration {
 		);
 		box-shadow: none;
 	}
+}
+
+// the window node paints its own background, which would show square corners
+// under the rounded decoration
+window.csd:not(.popup):not(.tooltip):not(.solid-csd):not(.maximized):not(.fullscreen):not(.tiled),
+dialog.csd:not(.solid-csd):not(.maximized):not(.fullscreen):not(.tiled) {
+	border-radius: $window-border-radius;
 }
 
 dialog.solid-csd,

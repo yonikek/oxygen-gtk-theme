@@ -262,7 +262,7 @@ $IntensityEffect: (
 
 $r: 4px; // standard radius (Oxygen uses slightly tighter corners)
 
-$window-border-radius: 4px;
+$window-border-radius: 3.5px;
 
 @function internal_insensitive($c) {
 	@return internal_Color(

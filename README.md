@@ -123,6 +123,17 @@ The widgets follow the Oxygen style's own drawing code
 * **Tabs and frames**: the page frame is a slab edge with no fill; the selected
   tab shares it and gets a fading light sheen, unselected tabs are flat, darker
   and translucent. Tree view headers are flat with an etched dark/light line.
+* **Menus** use the window gradient inside a frame with a bright inner top line
+  (5px corners). The highlighted item is not a coloured selection: Oxygen's
+  default mode is a flat sunken hole in the surface's mid colour, also used for
+  menu bar items. Separators are an etched dark line that fades out at both ends
+  with a bright line below.
+* **Tooltips** have a vertical gradient with an outline that is light along the
+  top half and fades to the bottom colour.
+* **Combo boxes**: a non-editable one is a button slab with a lightly embossed
+  arrow; an editable one is a single line-edit hole with the arrow inside it.
+* **Window corners**: all four corners of a client-side decorated window are
+  rounded by 3.5px (square when maximised, tiled or fullscreen).
 * **Selection** is a gradient from 130% of the highlight colour to the highlight
   colour.
 

@@ -229,3 +229,23 @@ combobox > box > button.combo:not(:only-child) {
 		@include entry(backdrop-insensitive);
 	}
 }
+
+// Oxygen draws an editable combo box as a single line-edit hole with the arrow
+// inside it and no divider: join the entry and its button, and let the arrow
+// take the hover colour while the pointer is over it.
+combobox > box.linked > entry {
+	border-right-width: 0;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	box-shadow: oxy-hole-joined();
+}
+combobox > box.linked > button.combo:not(:only-child) {
+	border-left-width: 0;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	box-shadow: oxy-hole-joined();
+
+	&:hover {
+		color: gtk("@theme_button_decoration_hover");
+	}
+}

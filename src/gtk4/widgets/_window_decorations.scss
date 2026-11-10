@@ -20,8 +20,11 @@ window {
 
 	margin: 0px;
 
+	// Oxygen rounds all four corners (3.5px) unless the window is maximised,
+	// tiled or fullscreen; the window clips its contents to the rounded shape
 	&.csd {
-		border-radius: $window-border-radius $window-border-radius 0 0;
+		border-radius: $window-border-radius;
+		overflow: hidden;
 	}
 
 	&.maximized,

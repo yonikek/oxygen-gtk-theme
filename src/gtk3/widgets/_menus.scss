@@ -38,10 +38,10 @@ menubar,
 					solid
 					gtk("@theme_button_decoration_focus");
 			} @else {
-				background-color: gtk(
-					"@theme_button_decoration_focus"
-				);
-				color: gtk("@theme_button_foreground_active");
+				// Oxygen: a flat sunken hole in the mid colour, text unchanged
+				background-color: oxy-menu-item-fill(gtk("@theme_bg_color"));
+				border-radius: 3px;
+				box-shadow: oxy-hole(gtk("@theme_bg_color"));
 			}
 		}
 
@@ -70,14 +70,20 @@ menubar,
 menu,
 .menu {
 	padding: 1mm;
-	background-color: gtkmix(gtk("@theme_bg_color"), gtk("@theme_base_color"), 0.3);
+	background-color: gtk("@theme_bg_color");
+	background-image: oxy-menu-fill(gtk("@theme_bg_color"));
+	border: 1px solid oxy-edge();
+	box-shadow: oxy-menu-frame(gtk("@theme_bg_color"));
 
-	border-radius: $r;
+	border-radius: 5px;
 
-	// axes borders in a composited env
+	// Oxygen's etched separator
 	separator {
-		color: gtk("@borders");
-		margin: 0.75mm 0;
+		margin: 0.75mm 0.5mm;
+		min-height: 1px;
+		background-color: transparent;
+		background-image: oxy-separator-line(gtk("@theme_bg_color"));
+		box-shadow: 0 1px 0 gtkalpha(oxy-light(gtk("@theme_bg_color")), 0.9);
 	}
 
 	menuitem {
@@ -87,11 +93,14 @@ menu,
 		padding: 0.75mm 2mm;
 		border: 1px solid transparent;
 
+		// Oxygen's highlight is a flat sunken hole in the mid colour, not a
+		// coloured selection
 		&:hover {
-			background-color: gtkalpha(gtk("@theme_selected_bg_color"), 0.3);
-			background-image: oxy-tint-gradient(gtk("@theme_selected_bg_color"));
-			border: 1px solid gtk("@theme_button_decoration_focus");
-			border-radius: $r;
+			background-color: oxy-menu-item-fill(gtk("@theme_bg_color"));
+			background-image: none;
+			border: 1px solid transparent;
+			border-radius: 3px;
+			box-shadow: oxy-hole(gtk("@theme_bg_color"));
 		}
 
 		&:disabled {
