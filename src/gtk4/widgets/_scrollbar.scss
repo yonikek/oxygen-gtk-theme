@@ -9,48 +9,54 @@
 		border: none;
 	}
 
+	// a 16px strip: the 10px groove with 3px on each side
 	trough {
 		margin: 0;
-		min-width: 15px;
-		min-height: 15px;
 		border: 1px solid;
 		border-radius: 3px;
 		background: oxy-dark(gtk("@theme_bg_color"));
-		border-color: oxy-hole-border();
-		box-shadow: oxy-hole();
+		border-color: oxy-scroll-groove-border(gtk("@theme_bg_color"));
+		box-shadow: oxy-scroll-groove(gtk("@theme_bg_color"));
+	}
+
+	&.vertical trough {
+		margin: 0 3px;
+		min-width: 8px;
+		min-height: 8px;
 	}
 
 	&.horizontal trough {
-		margin: 0;
-		min-width: 15px;
-		min-height: 15px;
+		margin: 3px 0;
+		min-width: 8px;
+		min-height: 8px;
 	}
 
+	// the handle fills the groove to its outer edge: 2px ring, then bevel, face
 	slider,
 	:not(webkitwebview) & slider {
-		margin: 2px;
-		border: 1px solid;
-		border-radius: 3px;
-		min-width: 9px;
+		margin: 0 -1px;
+		border: 2px solid;
+		border-radius: 4px;
+		min-width: 4px;
 		min-height: 21px;
-		background-clip: border-box;
+		background-clip: padding-box;
 		background-color: gtk("@theme_button_background_normal");
 		background-image: oxy-scroll-handle(gtk("@theme_button_background_normal"));
-		border-color: oxy-slab-border(gtk("@theme_button_background_normal"));
-		box-shadow: oxy-slab-shadow(gtk("@theme_button_background_normal"));
+		border-color: gtkalpha(oxy-shadow(gtk("@theme_button_background_normal")), 0.45);
+		box-shadow: oxy-scroll-handle-bevel(gtk("@theme_button_background_normal"));
 	}
 
 	&.horizontal slider,
 	:not(webkitwebview) &.horizontal slider {
-		margin: 2px;
+		margin: -1px 0;
 		min-width: 21px;
-		min-height: 9px;
+		min-height: 4px;
 	}
 
-	// glow in the hover colour while hovered or dragged
+	// the ring takes the hover colour while hovered or dragged
 	&:hover slider,
 	&.dragging slider {
-		box-shadow: oxy-glow-ring(gtk("@theme_button_decoration_hover")), oxy-slab-shadow(gtk("@theme_button_background_normal"));
+		border-color: gtkalpha(gtk("@theme_button_decoration_hover"), 0.85);
 	}
 }
 

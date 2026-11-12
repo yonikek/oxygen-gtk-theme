@@ -21,7 +21,8 @@ kept; the visual layer follows Oxygen.
   coloured hover/focus glows on buttons, entries, tabs, toolbars, titlebars,
   tooltips, selections, scrollbars, sliders, switches and progress bars.
 * **Window controls** built like the buttons of the Oxygen window decoration
-  (`DecoHelper::windecoButton`, `Button::paint`): a 21px button with a glossy
+  (`DecoHelper::windecoButton`, `Button::paint`): a 23px button (the 21 unit grid
+  scaled by 1.1, the size of the real controls) with a glossy
   disc (light top to dark bottom), a light-to-mid outline, a soft shadow, and on
   hover a halo plus glyph in the scheme's hover colour (its negative/red colour
   for close). The glyphs (minimise `v`, maximise `^`, restore diamond, close
@@ -115,8 +116,13 @@ The widgets follow the Oxygen style's own drawing code
   shadow along the top, an outline that darkens towards the bottom, and a bright
   contrast line just below. Grooves are filled with the dark colour. Focus draws
   the glow along the inside of the hole.
-* **Scroll bars**: a 15px dark groove holding a raised, glossy 9px handle.
-  Overlay scroll bars keep the thin layout.
+* **Scroll bars**, calibrated on a real Oxygen scroll bar: a 16px strip holding a
+  10px dark groove (a 1px darker edge, a soft inner shadow and a bright line
+  below its end) and a handle with a 2px dark ring (the shadow colour at 45%,
+  the hover colour while hovered), a 1px light bevel and a face that fades along
+  its length from the button colour to its mid colour. GTK3 also gets Oxygen's
+  default stepper layout, one arrow before the groove and two after it (GTK4 has
+  no steppers). Overlay scroll bars keep the thin layout until hovered.
 * **Sliders** have a dark groove and a round raised handle but no filled part,
   as in Qt. **Progress bars** use the highlight colour mixed 20% with the dark
   colour, a sheen at the top and bottom, and a light-to-dark bevel.

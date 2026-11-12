@@ -176,11 +176,18 @@ ring = (ring_shape(*RING_C, RING_RO, RING_RI, 1e9, "error") +
         ring_shape(*RING_C, RING_RO, RING_RI, rtop + 0.35 * rh, "success"))
 glyphs["oxygen-wc-ring-symbolic.svg"] = svg(21, ring + "\n")
 
-# soft shadow below the slab: three discs fading outwards (drawn under it)
-shadow = (disc_shape(*SHADOW_C, 9.4, 1e9, "error") +
-          disc_shape(*SHADOW_C, 8.6, 1e9, "warning") +
-          disc_shape(*SHADOW_C, 7.9, 1e9, "success"))
-glyphs["oxygen-wc-shadow-symbolic.svg"] = svg(21, shadow + "\n")
+# Soft shadow below the slab (DecoHelper::windecoButton -> Helper::drawShadow).
+# Oxygen paints a radial gradient centred 0.8 units below the slab whose alpha
+# follows (cos(pi*i/8)+1)*0.30*1.5 for i = 0..7 between radius 0.58*m and m
+# (m = 9.5). Measured on a real Oxygen window control, the alpha seen outward
+# from the slab's bottom edge is 0.64, 0.42, 0.19 and 0.03 per pixel, which is
+# softer and wider than that formula alone suggests. A handful of concentric
+# opaque discs painted from the largest down reproduces it (the stylesheet mixes
+# each disc's colour with the titlebar colour at that alpha).
+SHADOW_R = (9.3, 8.7, 8.1, 7.5, 6.9, 6.4)
+shadow_discs = [disc_shape(*SHADOW_C, r, 1e9, CLS[i % 3]) for i, r in enumerate(SHADOW_R)]
+glyphs["oxygen-wc-shadow-a-symbolic.svg"] = svg(21, "".join(shadow_discs[0:3]) + "\n")
+glyphs["oxygen-wc-shadow-b-symbolic.svg"] = svg(21, "".join(shadow_discs[3:6]) + "\n")
 
 # hover halo (drawOuterGlow): three rings around the slab fading outwards
 glow = (ring_shape(*GLOW_C, 8.2, 7.2, 1e9, "error") +

@@ -141,12 +141,27 @@
 	@return unquote("#{oxy-light($h)} #{$h} #{oxy-dark($h)} #{$h}");
 }
 
-// Scroll bar handle (Style::renderScrollBarHandle / StyleHelper::scrollHandle):
-// a gradient from the button colour to its mid colour, with a light contrast
-// over the upper half.
-@function oxy-scroll-handle($c) {
+// Scroll bar (Style::renderScrollBarHole / renderScrollBarHandle), calibrated
+// on a real Oxygen scroll bar. The groove is a 10px hole filled with the dark
+// colour: a 1px edge about 13% darker, a soft inner shadow, and a bright line
+// below its end. The handle is a button-coloured slab whose face fades along
+// its length to the mid colour, with a 1px light bevel (brighter along the top)
+// inside a 2px dark ring (the shadow colour at 45%; the hover colour while
+// hovered).
+@function oxy-scroll-groove-border($bg) {
+	@return oxy-outline(oxy-dark($bg), 0.87);
+}
+@function oxy-scroll-groove($bg) {
 	@return unquote(
-		"linear-gradient(to bottom, #{oxy-blend($c, oxy-light($c), 0.8)} 0%, #{oxy-blend($c, oxy-light($c), 0.3)} 50%, #{oxy-mid($c)} 100%)"
+		"inset 0 0 2px #{gtkalpha(oxy-shadow($bg), 0.3)}, 0 1px 0 #{gtkalpha(oxy-light($bg), 0.8)}"
+	);
+}
+@function oxy-scroll-handle($c) {
+	@return unquote("linear-gradient(to bottom, #{$c}, #{oxy-mid($c)})");
+}
+@function oxy-scroll-handle-bevel($c) {
+	@return unquote(
+		"inset 0 1px 0 #{oxy-light($c)}, inset 0 0 0 1px #{gtkalpha(oxy-light($c), 0.85)}"
 	);
 }
 
@@ -327,7 +342,8 @@
 }
 
 // Window controls, after Oxygen's decoration buttons (kdecoration:
-// Button::paint, DecoHelper::windecoButton). A 21px button holds a glossy
+// Button::paint, DecoHelper::windecoButton). A 23px button (the 21 unit grid scaled by 1.1, which is how large the real
+// controls are) holds a glossy
 // disc (light top -> dark bottom) with a light-to-mid outline, a soft shadow
 // below it, and on hover a halo in the hover colour (negative colour for
 // close). The glyph is drawn 1.5px above its light contrast copy.
@@ -366,16 +382,17 @@ $oxy-wc-weights: 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1;
 @mixin oxy-titlebutton($glyph, $hover: gtk("@theme_button_decoration_hover"), $margin: 0 1px) {
 	$tb_bg: gtk("@theme_titlebar_background");
 	$tb_light: oxy-wc-light($tb_bg);
-	$tb_shadow: oxy-outline($tb_bg, 0.35);
+	$tb_shadow: oxy-shadow($tb_bg);
 
 	$tb_glyph: -gtk-recolor(
 		url("../assets/oxygen-#{$glyph}-symbolic.svg"),
 		warning $tb_light
 	);
+	// outline: light at the top, the dark colour at the bottom
 	$tb_ring: -gtk-recolor(
 		url("../assets/oxygen-wc-ring-symbolic.svg"),
-		error oxy-wc-mid($tb_bg),
-		warning unquote("mix(#{$tb_light}, #{oxy-wc-mid($tb_bg)}, 0.5)"),
+		error oxy-wc-dark($tb_bg),
+		warning oxy-wc-mid($tb_bg),
 		success $tb_light
 	);
 	$tb_slab_a: -gtk-recolor(
@@ -415,11 +432,19 @@ $oxy-wc-weights: 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1;
 		warning oxy-wc-band($tb_bg, 7),
 		success oxy-wc-band($tb_bg, 8)
 	);
-	$tb_shadow_img: -gtk-recolor(
-		url("../assets/oxygen-wc-shadow-symbolic.svg"),
-		error oxy-wc-over($tb_shadow, $tb_bg, 0.08),
-		warning oxy-wc-over($tb_shadow, $tb_bg, 0.14),
-		success oxy-wc-over($tb_shadow, $tb_bg, 0.24)
+	// shadow alpha measured on a real Oxygen control: 0.64 at the slab edge falling
+	// to 0.03 about 3px out; two files of three discs each
+	$tb_shadow_a: -gtk-recolor(
+		url("../assets/oxygen-wc-shadow-a-symbolic.svg"),
+		error oxy-wc-over($tb_shadow, $tb_bg, 0.04),
+		warning oxy-wc-over($tb_shadow, $tb_bg, 0.1),
+		success oxy-wc-over($tb_shadow, $tb_bg, 0.2)
+	);
+	$tb_shadow_b: -gtk-recolor(
+		url("../assets/oxygen-wc-shadow-b-symbolic.svg"),
+		error oxy-wc-over($tb_shadow, $tb_bg, 0.35),
+		warning oxy-wc-over($tb_shadow, $tb_bg, 0.55),
+		success oxy-wc-over($tb_shadow, $tb_bg, 0.78)
 	);
 	$tb_glow: -gtk-recolor(
 		url("../assets/oxygen-wc-glow-symbolic.svg"),
@@ -428,8 +453,8 @@ $oxy-wc-weights: 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1;
 		success oxy-wc-over($hover, $tb_bg, 0.18)
 	);
 
-	min-width: 21px;
-	min-height: 21px;
+	min-width: 23px;
+	min-height: 23px;
 	margin: $margin;
 	padding: 0;
 	border: none;
@@ -442,10 +467,10 @@ $oxy-wc-weights: 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1;
 	opacity: 1;
 	color: gtk("@theme_titlebar_foreground");
 	background-color: transparent;
-	background-image: $tb_glyph, $tb_ring, $tb_slab_c, $tb_slab_b, $tb_slab_a, $tb_shadow_img;
+	background-image: $tb_glyph, $tb_ring, $tb_slab_c, $tb_slab_b, $tb_slab_a, $tb_shadow_b, $tb_shadow_a;
 	background-position: center;
 	background-repeat: no-repeat;
-	background-size: 21px 21px;
+	background-size: 23px 23px;
 
 	// hide the stock icon, the glyph is drawn as the background
 	image {
@@ -456,7 +481,7 @@ $oxy-wc-weights: 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1;
 	&:hover:not(:checked):not(:active) {
 		color: $hover;
 		background-color: transparent;
-		background-image: $tb_glyph, $tb_ring, $tb_slab_c, $tb_slab_b, $tb_slab_a, $tb_glow, $tb_shadow_img;
+		background-image: $tb_glyph, $tb_ring, $tb_slab_c, $tb_slab_b, $tb_slab_a, $tb_glow, $tb_shadow_b, $tb_shadow_a;
 		box-shadow: none;
 	}
 
@@ -464,13 +489,13 @@ $oxy-wc-weights: 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1;
 	&:active:hover {
 		color: $hover;
 		background-color: transparent;
-		background-image: $tb_glyph, $tb_ring, $tb_slab_c_pressed, $tb_slab_b_pressed, $tb_slab_a_pressed, $tb_glow, $tb_shadow_img;
+		background-image: $tb_glyph, $tb_ring, $tb_slab_c_pressed, $tb_slab_b_pressed, $tb_slab_a_pressed, $tb_glow, $tb_shadow_b, $tb_shadow_a;
 		box-shadow: none;
 	}
 
 	&:focus,
 	&:focus:not(:checked):not(:active) {
-		background-image: $tb_glyph, $tb_ring, $tb_slab_c, $tb_slab_b, $tb_slab_a, $tb_shadow_img;
+		background-image: $tb_glyph, $tb_ring, $tb_slab_c, $tb_slab_b, $tb_slab_a, $tb_shadow_b, $tb_shadow_a;
 		box-shadow: none;
 	}
 
@@ -480,7 +505,7 @@ $oxy-wc-weights: 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1;
 	&:backdrop:focus {
 		color: gtk("@theme_titlebar_foreground_backdrop");
 		background-color: transparent;
-		background-image: $tb_glyph, $tb_ring, $tb_slab_c, $tb_slab_b, $tb_slab_a, $tb_shadow_img;
+		background-image: $tb_glyph, $tb_ring, $tb_slab_c, $tb_slab_b, $tb_slab_a, $tb_shadow_b, $tb_shadow_a;
 		box-shadow: none;
 		opacity: 0.55;
 	}
