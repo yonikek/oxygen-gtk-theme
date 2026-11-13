@@ -510,3 +510,99 @@ $oxy-wc-weights: 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1;
 		opacity: 0.55;
 	}
 }
+
+// ---------------------------------------------------------------------------
+// Window controls for GTK4 (plain CSS)
+// ---------------------------------------------------------------------------
+// Colouring SVG layers through -gtk-recolor palettes made of nested colour
+// functions was unreliable in GTK4: the same stylesheet gave a grey disc, a
+// blue-tinted disc or a black one. Colour functions in ordinary CSS properties
+// are what the rest of the theme uses and they are stable, so here the disc
+// is the button itself (a 16px circle, laid out in 23px of space): a face that
+// fades from the light to the dark colour, an outline that runs light to dark,
+// the shadow measured on a real Oxygen control as box-shadows, and the hover
+// halo as box-shadow rings. The glyph is the only image: a single-colour
+// recoloured SVG with no palette, plus a translucent white copy 1.5 units
+// below it (Oxygen's emboss).
+@function oxy-wc-face($bg) {
+	@return unquote("linear-gradient(to bottom, #{oxy-wc-light($bg)}, #{oxy-wc-dark($bg)})");
+}
+@function oxy-wc-face-pressed($bg) {
+	@return unquote("linear-gradient(to bottom, #{oxy-wc-dark($bg)}, #{oxy-wc-light($bg)})");
+}
+@function oxy-wc-ring-border($bg) {
+	@return unquote(
+		"#{oxy-wc-light($bg)} #{oxy-wc-mid($bg)} #{oxy-wc-dark($bg)} #{oxy-wc-mid($bg)}"
+	);
+}
+// measured alpha below the disc: 0.64 at the edge falling to 0.03 about 3px out
+@function oxy-wc-shadow-css($bg) {
+	@return unquote(
+		"0 1px 1px 0 #{gtkalpha(oxy-shadow($bg), 0.55)}, 0 2px 3px 0 #{gtkalpha(oxy-shadow($bg), 0.3)}, 0 0 1px 0 #{gtkalpha(oxy-shadow($bg), 0.2)}"
+	);
+}
+
+@mixin oxy-titlebutton-css($glyph, $hover: gtk("@theme_button_decoration_hover"), $margin: 15px 4px) {
+	$tb_bg: gtk("@theme_titlebar_background");
+	$tb_glyph: -gtk-recolor(url("../assets/oxygen-#{$glyph}-main-symbolic.svg"));
+	$tb_contrast: url("../assets/oxygen-#{$glyph}-contrast.svg");
+
+	// a 16px circle: 14px of content plus the 1px outline
+	min-width: 14px;
+	min-height: 14px;
+	margin: $margin;
+	padding: 0;
+	border: 1px solid;
+	border-color: oxy-wc-ring-border($tb_bg);
+	border-image: none;
+	border-radius: 50%;
+	-gtk-icon-source: none;
+	text-shadow: none;
+	-gtk-icon-shadow: none;
+	opacity: 1;
+	color: gtk("@theme_titlebar_foreground");
+	background-color: oxy-wc-mid($tb_bg);
+	background-image: $tb_glyph, $tb_contrast, oxy-wc-face($tb_bg);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 23px 23px, 23px 23px, 100% 100%;
+	box-shadow: oxy-wc-shadow-css($tb_bg);
+
+	// hide the stock icon, the glyph is drawn as the background
+	image {
+		color: transparent;
+	}
+
+	&:hover,
+	&:hover:not(:checked):not(:active) {
+		color: $hover;
+		background-color: oxy-wc-mid($tb_bg);
+		background-image: $tb_glyph, $tb_contrast, oxy-wc-face($tb_bg);
+		box-shadow: oxy-glow-ring($hover), oxy-wc-shadow-css($tb_bg);
+	}
+
+	&:active,
+	&:active:hover {
+		color: $hover;
+		background-color: oxy-wc-mid($tb_bg);
+		background-image: $tb_glyph, $tb_contrast, oxy-wc-face-pressed($tb_bg);
+		box-shadow: oxy-glow-ring($hover), inset 0 1px 2px #{gtkalpha(oxy-shadow($tb_bg), 0.4)};
+	}
+
+	&:focus,
+	&:focus:not(:checked):not(:active) {
+		background-image: $tb_glyph, $tb_contrast, oxy-wc-face($tb_bg);
+		box-shadow: oxy-wc-shadow-css($tb_bg);
+	}
+
+	// inactive window: the whole control fades out
+	&:backdrop,
+	&:backdrop:hover,
+	&:backdrop:focus {
+		color: gtk("@theme_titlebar_foreground_backdrop");
+		background-color: oxy-wc-mid($tb_bg);
+		background-image: $tb_glyph, $tb_contrast, oxy-wc-face($tb_bg);
+		box-shadow: oxy-wc-shadow-css($tb_bg);
+		opacity: 0.55;
+	}
+}

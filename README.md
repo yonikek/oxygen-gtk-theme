@@ -27,10 +27,15 @@ kept; the visual layer follows Oxygen.
   hover a halo plus glyph in the scheme's hover colour (its negative/red colour
   for close). The glyphs (minimise `v`, maximise `^`, restore diamond, close
   `x`) use the decoration's own 21 unit geometry with its light emboss copy.
-  Everything is a fixed-size background image made of opaque shapes (gradients
-  are nine bands of colour, the shadow and halo are mixed with the title bar
-  colour), so the controls keep their shape where GTK4 stretches the buttons and
-  draw the same in any SVG renderer. In an inactive window they fade out.
+  In GTK3 everything is a fixed-size stack of opaque SVG shapes recoloured from
+  the colour scheme (gradients are nine bands of colour). GTK4 draws the disc
+  with plain CSS instead (a 16px circular button with a gradient face, a
+  light-to-dark outline and box-shadows for the shadow and halo), because
+  recolouring several SVG layers through palettes of nested colour functions was
+  unreliable there: the same stylesheet gave a grey disc, a blue-tinted one or a
+  black one. Only the glyph is an image, with no palette. In an inactive window
+  the controls fade out. GTK4 stretches buttons to the header height, so the
+  circle relies on the 46px header bar; a taller header makes it an oval.
 * **Header bar**: Oxygen's title bar background, confined to the header bar. It
   starts at a slightly lighter top colour and relaxes to the window colour at
   the bottom edge, so it joins the flat window body without a seam, with

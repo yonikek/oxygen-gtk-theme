@@ -85,18 +85,18 @@ headerbar,
 .titlebar {
 	windowcontrols button {
 		&.close {
-			@include oxy-titlebutton(close, gtk("@error_color"), $margin: 11px 1px 12px);
+			@include oxy-titlebutton-css(close, gtk("@error_color"));
 		}
 		&.minimize {
-			@include oxy-titlebutton(minimize, $margin: 11px 1px 12px);
+			@include oxy-titlebutton-css(minimize);
 		}
 		&.maximize {
-			@include oxy-titlebutton(maximize, $margin: 11px 1px 12px);
+			@include oxy-titlebutton-css(maximize);
 		}
 
 		.maximized & {
 			&.maximize {
-				@include oxy-titlebutton(maximized, $margin: 11px 1px 12px);
+				@include oxy-titlebutton-css(maximized);
 			}
 		}
 	}

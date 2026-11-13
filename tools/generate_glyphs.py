@@ -81,6 +81,24 @@ glyphs["oxygen-maximized-symbolic.svg"] = layered(
     21, [[(7.5, 10.5), (10.5, 7.5), (13.5, 10.5), (10.5, 13.5)]], W, 1.5,
     closed=True)
 
+# --- window control glyphs without palettes (used by the GTK4 stylesheet) ----
+# GTK4 draws the disc, outline, shadow and halo with plain CSS, so the glyph is
+# the only image. It needs no recolour palette: "main" is a single-colour glyph
+# that takes the widget's colour, and "contrast" is the same glyph moved 1.5
+# units down in translucent white (Oxygen's light emboss copy), a plain image.
+WC_SHAPES = {
+    "close": ([[(7.5, 7.5), (13.5, 13.5)], [(13.5, 7.5), (7.5, 13.5)]], False),
+    "minimize": ([[(7.5, 9.5), (10.5, 12.5), (13.5, 9.5)]], False),
+    "maximize": ([[(7.5, 11.5), (10.5, 8.5), (13.5, 11.5)]], False),
+    "maximized": ([[(7.5, 10.5), (10.5, 7.5), (13.5, 10.5), (10.5, 13.5)]], True),
+}
+for _name, (_shapes, _closed) in WC_SHAPES.items():
+    _main = "".join(polyline(sh, W, None, _closed) for sh in _shapes)
+    _contrast = "".join(polyline(shift(sh, 0, 1.5), W, None, _closed) for sh in _shapes)
+    glyphs["oxygen-%s-main-symbolic.svg" % _name] = svg(21, _main + "\n")
+    glyphs["oxygen-%s-contrast.svg" % _name] = svg(
+        21, '<g fill="#ffffff" fill-opacity="0.6">%s</g>\n' % _contrast)
+
 # --- window control button (DecoHelper::windecoButton), 21 unit grid --------
 # Built only from opaque shapes, plain polygons and the four recolour classes:
 # no fill-opacity, no fill-rule and no arc commands, so every SVG renderer GTK
