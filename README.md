@@ -148,6 +148,32 @@ The widgets follow the Oxygen style's own drawing code
 * **Selection** is a gradient from 130% of the highlight colour to the highlight
   colour.
 
+## Nix
+
+`flake.nix` and `package.nix` build and install the theme:
+
+```sh
+git add flake.nix package.nix     # flakes only see files git knows about
+nix build .#                      # result/share/themes/Oxygen
+```
+
+To use it from a NixOS flake, add it as an input and put the package in the
+system profile (GTK2 only finds themes in its own prefix, so a system-wide
+install is what makes the GTK2 theme visible):
+
+```nix
+inputs.oxygen-gtk-theme = {
+  url = "github:you/oxygen-gtk-theme"; # or "path:/home/you/oxygen-gtk-theme"
+  inputs.nixpkgs.follows = "nixpkgs";
+};
+# ...
+environment.systemPackages = [ inputs.oxygen-gtk-theme.packages.${pkgs.system}.default ];
+```
+
+The Nix build uses Dart Sass (`dart-sass`). The theme's colours are baked from
+the `BreezeLight`/`BreezeDark` schemes at build time; the running desktop's
+colour scheme still overrides them at runtime as described above.
+
 ## Scroll bars
 
 Oxygen has no overlay scroll bars, so the theme asks GTK for permanent ones: the
