@@ -1,4 +1,6 @@
 build
+result
+flake.lock
 install 
 .clang-format
 CMakeLists.txt.user*

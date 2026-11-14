@@ -1,7 +1,7 @@
 {
   description = "Oxygen GTK theme (GTK 2/3/4), derived from Breeze GTK";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
   outputs =
     { self, nixpkgs }:

@@ -33,6 +33,7 @@ stdenv.mkDerivation {
     (python3.withPackages (ps: [ ps.pycairo ]))
     # provides the `sass` binary that build_theme.sh uses when sassc is absent
     dart-sass
+    kdePackages.wrapQtAppsHook
   ];
 
   # find_package(Breeze) in CMakeLists.txt
