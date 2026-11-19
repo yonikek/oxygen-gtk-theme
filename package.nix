@@ -29,6 +29,7 @@ stdenv.mkDerivation {
   nativeBuildInputs = [
     cmake
     kdePackages.extra-cmake-modules
+    kdePackages.wrapQtAppsHook
     # render_assets.py draws the GTK2 pixmaps with pycairo
     (python3.withPackages (ps: [ ps.pycairo ]))
     # provides the `sass` binary that build_theme.sh uses when sassc is absent
