@@ -214,15 +214,15 @@ modelbutton.flat,
 
 	@extend %undecorated_button;
 	color: gtk("@theme_fg_color");
-	&:hover {
-		background-color: gtkalpha(gtk("@theme_selected_bg_color"), 0.3);
-			background-image: oxy-tint-gradient(gtk("@theme_selected_bg_color"));
-		border: 1px solid gtk("@theme_button_decoration_focus");
-		border-radius: 4px;
-	}
+	// Oxygen's highlight is a flat sunken hole in the mid colour, not a
+	// coloured selection (the same as classic menu items)
+	&:hover,
 	&:selected {
-		background-color: gtk("@theme_button_decoration_focus");
-		color: gtk("@theme_button_foreground_active");
+		background-color: oxy-menu-item-fill(gtk("@theme_bg_color"));
+		background-image: none;
+		border: 1px solid transparent;
+		border-radius: 3px;
+		box-shadow: oxy-hole(gtk("@theme_bg_color"));
 	}
 	&:backdrop,
 	&:backdrop:hover {
@@ -261,17 +261,19 @@ modelbutton.flat arrow {
 
 popover,
 menu {
-	border: 1px solid gtk("@borders");
+	border: 1px solid oxy-edge();
 }
 
 popover.background {
 	$shadow: rgba(0, 0, 0, 0.25);
 
 	padding: 0px;
-	border-radius: $r;
+	border-radius: 5px;
 	background-color: gtk("@theme_bg_color");
+	background-image: oxy-menu-fill(gtk("@theme_bg_color"));
 
-	box-shadow: 0px 0px 2mm $shadow,
+	box-shadow: oxy-menu-frame(gtk("@theme_bg_color")),
+		0px 0px 2mm $shadow,
 		0px 0.25mm 1mm scale-color($shadow, $alpha: -40%);
 
 	&:backdrop {
@@ -302,8 +304,13 @@ popover.background {
 		}
 	}
 
+	// Oxygen's etched separator
 	separator {
-		margin: 0.75mm 0;
+		margin: 0.75mm 0.5mm;
+		min-height: 1px;
+		background-color: transparent;
+		background-image: oxy-separator-line(gtk("@theme_bg_color"));
+		box-shadow: 0 1px 0 gtkalpha(oxy-light(gtk("@theme_bg_color")), 0.9);
 	}
 
 	list separator {

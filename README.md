@@ -174,6 +174,56 @@ The Nix build uses Dart Sass (`dart-sass`). The theme's colours are baked from
 the `BreezeLight`/`BreezeDark` schemes at build time; the running desktop's
 colour scheme still overrides them at runtime as described above.
 
+## Flatpak
+
+Flatpak applications cannot see themes installed on the host. GTK3 themes are
+shipped as a Flatpak extension named `org.gtk.Gtk3theme.<theme name>`; an
+application uses it when it matches the current GTK theme, so the extension
+here is `org.gtk.Gtk3theme.Oxygen` and applies when your GTK theme is `Oxygen`.
+The manifest in `flatpak/` follows the Flathub `org.gtk.Gtk3theme.Breeze`
+extension.
+
+```sh
+# once: the runtime and SDK the extension is built against
+flatpak install flathub org.freedesktop.Platform//25.08 org.freedesktop.Sdk//25.08
+
+# build and install it for your user (needs flatpak-builder)
+cd flatpak
+flatpak-builder --user --install --force-clean build-dir org.gtk.Gtk3theme.Oxygen.json
+```
+
+Check it with `flatpak list --user | grep Gtk3theme`, then start a GTK3 Flatpak
+application. To test without changing your desktop theme, run it with
+`flatpak run --env=GTK_THEME=Oxygen <app id>`.
+
+The theme's colours follow the KDE colour scheme through the `colors.css` that
+kde-gtk-config writes into `~/.config/gtk-3.0`. Flatpak applications cannot read
+that directory by default, so allow it (this is the same workaround the Breeze
+extension documents):
+
+```sh
+flatpak override --user --filesystem=xdg-config/gtk-3.0:ro
+```
+
+Notes:
+
+* Only GTK3 applications can use it. Flatpak has no theme extension point for
+  GTK2 or GTK4 (libadwaita applications ignore GTK themes anyway).
+* The manifest builds `sassc` and `libsass` from source, as the Breeze extension
+  does, and runs `src/build_theme.sh.cmake` directly instead of CMake. The
+  Breeze source archive is only used for its `BreezeLight` and `BreezeDark`
+  colour schemes. `build_theme.sh -d` writes the dark fallback `gtk-dark.css` in
+  the same run.
+* Only `Oxygen/gtk-3.0` is writable for an extension, so the shared `assets`
+  directory is installed inside it and every `../assets/` reference in the
+  stylesheets is rewritten to `./assets/` during the build.
+* The stylesheets were developed against Ruby Sass and Dart Sass. If `sassc`
+  (libsass) rejects them, the error appears in the `flatpak-builder` output.
+* When the runtime version changes, update `runtime-version` and the
+  `python3.13` directory in the `PYTHONPATH` of the `oxygen-gtk-theme` module.
+* Submitting to Flathub needs a tagged release, a `git` source with a commit
+  instead of the local `dir` source, and a homepage `<url>` in the appdata.
+
 ## Scroll bars
 
 Oxygen has no overlay scroll bars, so the theme asks GTK for permanent ones: the

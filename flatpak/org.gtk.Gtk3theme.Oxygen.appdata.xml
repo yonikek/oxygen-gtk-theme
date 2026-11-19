@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="runtime">
+  <id>org.gtk.Gtk3theme.Oxygen</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>LGPL-2.1-only</project_license>
+  <name>Oxygen GTK theme</name>
+  <summary>GTK theme in the style of the KDE Oxygen theme</summary>
+  <description>
+    <p>GTK theme that follows the look of the KDE Oxygen style and the KDE colour scheme. It is derived from the Breeze GTK theme.</p>
+  </description>
+  <releases>
+    <release version="1.0.0" date="2026-11-15"/>
+  </releases>
+</component>

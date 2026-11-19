@@ -1,0 +1,144 @@
+{
+    "id": "org.gtk.Gtk3theme.Oxygen",
+    "branch": "3.22",
+    "runtime": "org.freedesktop.Platform",
+    "runtime-version": "25.08",
+    "build-extension": true,
+    "sdk": "org.freedesktop.Sdk",
+    "separate-locales": false,
+    "cleanup-commands": [
+        "rm -rvf ${FLATPAK_DEST}/_pfx"
+    ],
+    "build-options": {
+        "prefix": "/usr/share/runtime/share/themes/Oxygen/gtk-3.0/_pfx"
+    },
+    "modules": [
+        {
+            "name": "sassc",
+            "buildsystem": "autotools",
+            "config-opts": [
+                "--with-libsass=/usr/share/runtime/share/themes/Oxygen/gtk-3.0/_pfx"
+            ],
+            "cleanup": [
+                "*"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/sass/sassc/archive/3.6.2.tar.gz",
+                    "sha256": "608dc9002b45a91d11ed59e352469ecc05e4f58fc1259fc9a9f5b8f0f8348a03",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 12485,
+                        "stable-only": true,
+                        "url-template": "https://github.com/sass/sassc/archive/$version.tar.gz"
+                    }
+                },
+                {
+                    "type": "script",
+                    "dest-filename": "bootstrap",
+                    "commands": [
+                        "autoreconf -si"
+                    ]
+                }
+            ],
+            "modules": [
+                {
+                    "name": "libsass",
+                    "buildsystem": "autotools",
+                    "cleanup": [
+                        "*"
+                    ],
+                    "sources": [
+                        {
+                            "type": "archive",
+                            "url": "https://github.com/sass/libsass/archive/3.6.6.tar.gz",
+                            "sha512": "659828c854af391c10a16954425fbeeb5fa036189dea45555cd8046338f7469eb7f8d84134030ce644921514b8f397ef6070b56dfb116ea7ce94328d64576518",
+                            "x-checker-data": {
+                                "type": "anitya",
+                                "project-id": 11766,
+                                "stable-only": true,
+                                "url-template": "https://github.com/sass/libsass/archive/$version.tar.gz"
+                            }
+                        },
+                        {
+                            "type": "script",
+                            "dest-filename": "bootstrap",
+                            "commands": [
+                                "autoreconf -si"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "oxygen-gtk-theme",
+            "buildsystem": "simple",
+            "build-options": {
+                "append-path": "/usr/share/runtime/share/themes/Oxygen/gtk-3.0/_pfx/bin",
+                "//": "Check this path after updating runtime",
+                "env": {
+                    "PYTHONPATH": "/usr/share/runtime/share/themes/Oxygen/gtk-3.0/_pfx/lib/python3.13/site-packages"
+                }
+            },
+            "//": [
+                "Same approach as org.gtk.Gtk3theme.Breeze: build_theme.sh is run",
+                "directly instead of through CMake, which would need ECM and the",
+                "Breeze package. The theme only needs the BreezeLight / BreezeDark",
+                "colour schemes, which come from the Breeze source archive.",
+                "The theme shares an 'assets' directory between its GTK2, GTK3 and",
+                "GTK4 variants and gtk.css refers to it as ../assets/. The extension",
+                "may only write to Oxygen/gtk-3.0, so the assets are put in that",
+                "directory and every reference is changed to ./assets/.",
+                "build_theme.sh -d writes gtk-dark.css (built from BreezeDark) next",
+                "to gtk.css, so a single run produces both."
+            ],
+            "build-commands": [
+                "find src -name '*.scss' -print -execdir sed -i 's#\\.\\./assets/#./assets/#' {} \\;",
+                "cd src && sed -i 's/@Python3_EXECUTABLE@/python3/g' build_theme.sh.cmake && sh ./build_theme.sh.cmake -c BreezeLight -d BreezeDark -t ${FLATPAK_BUILDER_BUILDDIR}/Oxygen -r ${FLATPAK_BUILDER_BUILDDIR}/breeze/colors",
+                "cp -rv --no-preserve=ownership ${FLATPAK_BUILDER_BUILDDIR}/Oxygen/gtk-3.0/* ${FLATPAK_DEST}",
+                "cp -rv --no-preserve=ownership ${FLATPAK_BUILDER_BUILDDIR}/Oxygen/assets ${FLATPAK_DEST}"
+            ],
+            "sources": [
+                {
+                    "type": "dir",
+                    "path": "..",
+                    "skip": [
+                        ".git",
+                        "build",
+                        "flatpak"
+                    ]
+                },
+                {
+                    "type": "archive",
+                    "url": "https://download.kde.org/stable/plasma/6.8.3/breeze-6.8.3.tar.xz",
+                    "sha256": "1d47a61f9f397f212d7a23d7ed7a7289b026757a050610304bb945dc067937e2",
+                    "dest": "breeze",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 8761,
+                        "stable-only": true,
+                        "url-template": "https://download.kde.org/stable/plasma/$version/breeze-$version.tar.xz"
+                    }
+                }
+            ],
+            "modules": [
+                "python-deps.json"
+            ]
+        },
+        {
+            "name": "appdata",
+            "buildsystem": "simple",
+            "build-commands": [
+                "install -Dm644 org.gtk.Gtk3theme.Oxygen.appdata.xml -t ${FLATPAK_DEST}/share/appdata"
+            ],
+            "sources": [
+                {
+                    "type": "file",
+                    "path": "org.gtk.Gtk3theme.Oxygen.appdata.xml"
+                }
+            ]
+        }
+    ]
+}

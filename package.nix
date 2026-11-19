@@ -33,7 +33,6 @@ stdenv.mkDerivation {
     (python3.withPackages (ps: [ ps.pycairo ]))
     # provides the `sass` binary that build_theme.sh uses when sassc is absent
     dart-sass
-    kdePackages.wrapQtAppsHook
   ];
 
   # find_package(Breeze) in CMakeLists.txt
@@ -49,8 +48,8 @@ stdenv.mkDerivation {
 
   meta = {
     description = "GTK 2/3/4 theme in the style of KDE's Oxygen, following the KDE colour scheme";
-    # derived from Breeze GTK (LGPL-2.1-or-later)
-    license = lib.licenses.lgpl21Plus;
+    # derived from Breeze GTK, which the Flathub extension also lists as LGPL-2.1-only
+    license = lib.licenses.lgpl21Only;
     platforms = lib.platforms.linux;
   };
 }

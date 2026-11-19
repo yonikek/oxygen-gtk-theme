@@ -1,0 +1,52 @@
+{
+    "name": "python-deps",
+    "buildsystem": "simple",
+    "build-commands": [],
+    "modules": [
+        {
+            "name": "python3-cairo",
+            "buildsystem": "simple",
+            "build-commands": [
+                "pip3 install --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=\"${FLATPAK_DEST}/_pfx\" pycairo"
+            ],
+            "sources": [
+                {
+                    "type": "file",
+                    "url": "https://files.pythonhosted.org/packages/19/4f/0d48a017090d4527e921d6892bc550ae869902e67859fc960f8fe63a9094/pycairo-1.26.1.tar.gz",
+                    "sha256": "a11b999ce55b798dbf13516ab038e0ce8b6ec299b208d7c4e767a6f7e68e8430",
+                    "x-checker-data": {
+                        "type": "pypi",
+                        "name": "pycairo",
+                        "versions": {
+                            "<": "1.27.0"
+                        }
+                    }
+                },
+                {
+                    "type": "file",
+                    "url": "https://files.pythonhosted.org/packages/ac/11/0a953274017ca5c33a9831bc5e052e825d174a3551bd18924777794c8162/setuptools-74.1.0.tar.gz",
+                    "sha256": "bea195a800f510ba3a2bc65645c88b7e016fe36709fefc58a880c4ae8a0138d7",
+                    "x-checker-data": {
+                        "type": "pypi",
+                        "name": "setuptools",
+                        "versions": {
+                            "<=": "74.1.0"
+                        }
+                    }
+                },
+                {
+                    "type": "file",
+                    "url": "https://files.pythonhosted.org/packages/a2/b8/6a06ff0f13a00fc3c3e7d222a995526cbca26c1ad107691b6b1badbbabf1/wheel-0.38.4.tar.gz",
+                    "sha256": "965f5259b566725405b05e7cf774052044b1ed30119b5d586b2703aafe8719ac",
+                    "x-checker-data": {
+                        "type": "pypi",
+                        "name": "wheel",
+                        "versions": {
+                            "<=": "0.38.4"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

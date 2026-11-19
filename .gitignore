@@ -1,6 +1,4 @@
 build
-result
-flake.lock
 install 
 .clang-format
 CMakeLists.txt.user*
@@ -11,3 +9,6 @@ CMakeLists.txt.user*
 /cmake-build*
 .cache
 src/.sass-cache/
+/flatpak/build-dir/
+/flatpak/.flatpak-builder/
+flake.lock
